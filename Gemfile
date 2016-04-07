@@ -20,13 +20,14 @@ gem 'json-jwt'
 
 # StateMachine
 gem 'aasm'
+gem 'pry'
 
 gem 'activeadmin', '~> 1.0.0.pre2'
-gem "active_material", git: "git@github.com:vigetlabs/active_material.git"
+gem "active_material", git: "https://github.com/vigetlabs/active_material.git"
 
 gem 'devise'
 
-gem 'doodle_rails', path: '~/workspace/ruby/doodle_rails'
+gem 'doodle_rails', path: '~/projects/gabriel/doodle_rails'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks

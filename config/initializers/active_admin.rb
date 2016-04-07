@@ -4,7 +4,7 @@ ActiveAdmin.setup do |config|
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
   #
-  config.site_title = "Innovation Week"
+  config.site_title = "Doodle"
 
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
@@ -259,4 +259,12 @@ ActiveAdmin.setup do |config|
   # You can enable or disable them for all resources here.
   #
   # config.filters = true
+  #
+  config.namespace :admin do |admin|
+    admin.build_menu do |menu|
+      menu.add label: 'Users', priority: 1
+      menu.add label: 'Keyword', priority: 2
+      menu.add label: 'Chat', priority: 3
+    end
+  end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160407013008) do
+ActiveRecord::Schema.define(version: 20160407181853) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -80,9 +80,8 @@ ActiveRecord::Schema.define(version: 20160407013008) do
     t.integer  "user_id"
     t.integer  "channel_id"
     t.string   "status"
-    t.integer  "concurrent_protocols"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_index "doodle_user_channels", ["channel_id"], name: "index_doodle_user_channels_on_channel_id"
@@ -90,10 +89,11 @@ ActiveRecord::Schema.define(version: 20160407013008) do
 
   create_table "doodle_users", force: :cascade do |t|
     t.string   "login"
-    t.string   "pass"
+    t.string   "password"
     t.string   "type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "concurrent_protocols"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
 end

@@ -7,6 +7,7 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 require 'doodle'
+require 'pry'
 
 module InnovationWeek
   class Application < Rails::Application

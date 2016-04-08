@@ -1,26 +1,21 @@
 ActiveAdmin.register Doodle::Channel, as: "Channel"  do
   menu parent: 'Chat'
-  permit_params :name, users_attributes: [:login]
+  permit_params :name, user_channels_attributes: [:id, :login, :user_id, :channel_id, :_destroy]
 
   form do |f|
     f.input :name
-    f.has_many :user_channel, new_record: true do |u|
-      u.input :login
+    f.has_many :user_channels, allow_destroy: true do |u|
+      u.input :user
     end
     f.actions
   end
 
-  before_action only: [:update, :create] do
-    @channel = Doodle::Channel.find(permitted_params[:id]) || Doodle::Channel.new
-    @channel.users << permitted_params[:channel][:users_attributes].to_a.map { |user| Doodle::User::Analyst.find_by_login user[1]["login"] }
-  end
-
-  show do
+  show do |channel|
     attributes_table do
       row :name
-      table_for channel.users do
-        column "user" do |user|
-          user.login
+      attributes_table do
+        row :user do |channel|
+          channel.users.map { |u| u.login }.join(", ").html_safe
         end
       end
     end

@@ -13,10 +13,8 @@ ActiveAdmin.register Doodle::Channel, as: "Channel"  do
   show do |channel|
     attributes_table do
       row :name
-      attributes_table do
-        row :user do |channel|
-          channel.users.map { |u| u.login }.join(", ").html_safe
-        end
+      row :user do |channel|
+        channel.users.map { |u| u.login }.join(", ").html_safe
       end
     end
   end

@@ -27,7 +27,7 @@ gem "active_material", git: "https://github.com/vigetlabs/active_material.git"
 
 gem 'devise'
 
-gem 'doodle_rails', path: '~/projects/gabriel/doodle_rails'
+gem 'doodle_rails', git: 'https://github.com/GabrielMalakias/doodle_rails.git'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks

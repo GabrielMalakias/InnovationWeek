@@ -6,15 +6,14 @@ ActiveAdmin.register_page "Dashboard" do
     columns do
       column do
         panel "Analistas" do
-          #table_for Doodle::User::Analyst.joins(:user_channels).where('doodle_user_channels.status' => 'online') do
           panel "Ativos" do
-            table_for [ {login: 'aladdin', protocols_number: 17} ] do
+            table_for Doodle::ReportsHelper.online_users_and_protocols_in_progress do
               column :login
-              column :protocols_number
+              column :number
             end
           end
           panel "Em Espera" do
-            table_for [ {login: 'aladdin'} ] do
+            table_for Doodle::ReportsHelper.waiting_users do
               column :login
             end
           end
@@ -24,18 +23,24 @@ ActiveAdmin.register_page "Dashboard" do
       column do
         panel 'Protocolos' do
           panel  "Waiting"
-          table_for [ {name: 'corporativo', number: 17} ] do
+          table_for Doodle::ReportsHelper.protocol_with_status(Doodle::Protocol::STATUSES[:waiting]) do
             column :name
             column :number
           end
         end
-        panel  "Doing" do
-          table_for [ {name: 'corporativo', number: 17} ] do
+        panel  "In Progress" do
+          table_for Doodle::ReportsHelper.protocol_with_status(Doodle::Protocol::STATUSES[:in_progress]) do
             column :name
             column :number
           end
         end
-      end
+        panel  "Finalized" do
+          table_for Doodle::ReportsHelper.protocol_with_status(Doodle::Protocol::STATUSES[:finalized]) do
+            column :name
+            column :number
+          end
+        end
+       end
     end
   end
 end

@@ -1,1 +1,154 @@
-<h1>customers#index</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Doodle Client</title>
+
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link href="public/dist/assets/css/style.css" rel="stylesheet" > -->
+        <%= stylesheet_link_tag 'application' %>
+</head>
+	<body id="central-do-cliente">
+	<div class="dc-button-back" style="display: none;">
+		<a class="link-fake-return" href="./index.html">
+			<span>Ir para a <strong>Central do Cliente</strong></span>
+		</a>
+	</div>
+
+	<div class="links-fakes-list">
+		<ul class="links-fake">
+			<li class="painel-smtp"></li>
+			<li class="painel-de-email"></li>
+		</ul>
+	</div>
+
+	<div class="dc-launch dc-hide">
+		<a class="btn-floating dc-button btn-large waves-effect waves-light blue">
+			<i class="material-icons">group</i>
+		</a>
+	</div>
+
+	<aside class="dc-aside-main dc-floating-right">
+
+		<header class="dc-header">
+			<a class="dc-floating-left" href="#">
+				<i class="material-icons dc-burger">view_headline</i>
+			</a>
+
+			<div class="dc-title">
+				<h2 class="title">
+					<a href="#">
+						<strong>Chat</strong> Cliente
+					</a>
+				</h2>
+			</div>
+
+			<div class="dc-actions-buttons dc-floating-right">
+				<ul class="dc-buttons">
+					<li class="dc-minimize">
+						<a href="">-</a>
+					</li>
+					<li class="dc-close">
+						<a href="">×</a>
+					</li>
+				</ul>
+			</div>
+		</header>
+
+		<div class="dc-container-main">
+			<div class="dc-container-message">
+
+				<div class="dc-card card-welcome dc-card-color-white">
+					<div class="dc-avatar-container">
+						<div class="dc-avatar">
+                                                        <%= image_tag('avatar-castor.gif', alt: 'Avatar') %>
+						</div>
+					</div>
+					<div class="dc-welcome">
+						<h1>Bem vindo à Locaweb!!</h1>
+						<p>Bom dia, meu nome é <strong>Renato</strong>, sou analista da Locaweb. Como posso ajudá-lo(a)?</p>
+					</div>
+				</div>
+
+				<div class="dc-messages-container">
+					<div class="dc-message message-client">
+						<div class="dc-content-message">
+							<span class="dc-name-user">username: </span>
+							<p class="dc-text-message">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis nam dolore iste, ratione mollitia, porro possimus error corporis sint voluptatem, unde ipsa debitis voluptates soluta eum impedit fugiat quaerat quam?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis nam dolore iste, ratione mollitia, porro possimus error corporis sint voluptatem, unde ipsa debitis voluptates soluta eum impedit fugiat quaerat quam?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis nam dolore iste, ratione mollitia, porro possimus error corporis sint voluptatem, unde ipsa debitis voluptates soluta eum impedit fugiat quaerat quam?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis nam dolore iste, ratione mollitia, porro possimus error corporis sint voluptatem, unde ipsa debitis voluptates soluta eum impedit fugiat quaerat quam?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis nam dolore iste, ratione mollitia, porro possimus error corporis sint voluptatem, unde ipsa debitis voluptates soluta eum impedit fugiat quaerat quam?</p>
+						</div>
+					</div>
+					<span class="dc-type-indication dc-floating-right">Read</span>
+				</div>
+
+				<div class="dc-messages-container">
+					<div class="dc-message message-analyst">
+						<div class="dc-content-message">
+							<span class="dc-name-user">username: </span>
+							<p class="dc-text-message">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis nam dolore iste, ratione mollitia, porro possimus error corporis sint voluptatem, unde ipsa debitis voluptates soluta eum impedit fugiat quaerat quam?</p>
+						</div>
+					</div>
+					<span class="dc-type-indication dc-floating-left">Read</span>
+				</div>
+
+
+				<div class="dc-card dc-card-action dc-card-color-white">
+					<div class="dc-card-header action">
+						<i class="material-icons icon-mail">
+							email
+						</i>
+						<h2>Teste Locamail:</h2>
+					</div>
+					<div class="dc-action-content">
+
+						<ul class="dc-card-list dc-test-email">
+							<li>IMAP</li>
+							<li>POP</li>
+							<li class="dc-error-danger">SMTP</li>
+						</ul>
+
+						<ul class="dc-card-list dc-other-test">
+							<li>Caixa postal: <strong>68% utilizado</strong> </li>
+							<li>Domínio: <strong>Locaweb</strong> (MX Interno)</li>
+							<li>Anti-Spam: <strong>ativo</strong></li>
+						</ul>
+
+					</div>
+					<a href="#" class="dc-opencall-container disabled">
+						<div class="dc-action-call">
+							<span class="dc-icon open-call">
+								<i class="material-icons">comment</i>
+							</span>
+							<span class="dc-open-call">Abrir chamado</span>
+						</div>
+					</a>
+				</div>
+
+				<div class="dc-card card-finish dc-card-color-white">
+					<div class="dc-avatar-container">
+						<div class="dc-avatar">
+							<img src="dist/assets/images/avatar-castor.gif" alt="Avatar">
+						</div>
+					</div>
+					<div class="dc-welcome">
+						<h1>A Locaweb agradece seu contato!</h1>
+						<p>Muito obrigado pelo seu contato! É sempre um prazer ajudar um Locaweber!</p>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<footer class="dc-footer">
+			<div class="dc-container-form">
+				<form action="">
+					<textarea class="dc-text-area" name="message" placeholder="Qual sua dúvida?"></textarea>
+					<button id="dc-send" class="dc-btn-send"></button>
+				</form>
+			</div>
+		</footer>
+	</aside>
+
+	<script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+	<script src="dist/assets/js/scripts.js"></script>
+	</body>
+</html>

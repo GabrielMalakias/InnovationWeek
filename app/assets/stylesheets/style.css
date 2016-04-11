@@ -6219,10 +6219,10 @@ body {
   background-image: url("central_do_cliente.png"); }
 
 #painel-de-email {
-  background-image: url("../images/painel-de-email.png"); }
+  background-image: url("painel-de-email.png"); }
 
 #painel-smtp {
-  background-image: url("../images/smtp.png"); }
+  background-image: url("smtp.png"); }
 
 .dc-hide {
   display: none; }
@@ -6377,8 +6377,8 @@ body {
   overflow: hidden; }
   .dc-avatar img {
     position: relative;
-    top: 0px;
-    left: 0px; }
+    top: -99px;
+    left: -97px; }
 
 .dc-card {
   cursor: pointer;

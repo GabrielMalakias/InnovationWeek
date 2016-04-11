@@ -11,13 +11,13 @@
       </ul>
     </div>
 
-    <div class="dc-launch dc-hide">
+    <div class="dc-launch" id="open-chat">
       <a class="btn-floating dc-button btn-large waves-effect waves-light blue">
         <i class="material-icons">group</i>
       </a>
     </div>
 
-    <aside class="dc-aside-main dc-floating-right">
+    <aside class="dc-aside-main dc-floating-right" id="chat-box">
 
     <header class="dc-header">
     <a class="dc-floating-left" href="#">
@@ -47,10 +47,20 @@
     <div class="dc-container-main">
       <div class="dc-container-message">
 
+        <div class="input-field col s6" id="queue_options">
+          <label>Filas disponíveis:</label><br><br>
+          <select class="browser-default" id="options">
+            <option value="" disabled selected>Escolha uma fila</option>
+          </select>
+        </div>
+
+        <a class="waves-effect waves-light btn">Iniciar Chat</a>
+
+        <!--
         <div class="dc-card card-welcome dc-card-color-white">
           <div class="dc-avatar-container">
             <div class="dc-avatar">
-              <%= image_tag('avatar-castor.gif', alt: 'Avatar') %>
+              <%# image_tag('avatar-castor.gif', alt: 'Avatar') %>
             </div>
           </div>
           <div class="dc-welcome">
@@ -135,7 +145,5 @@
       </form>
     </div>
     </footer>
+    -->
     </aside>
-
-  </body>
-</html>

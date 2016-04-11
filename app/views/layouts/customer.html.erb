@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>InnovationWeek</title>
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <%= stylesheet_link_tag 'style', media: 'all', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body id='central-do-cliente'>
+
+<%= yield %>
+
+<script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+<%= javascript_include_tag 'scripts', 'data-turbolinks-track' => true %>
+</body>
+</html>

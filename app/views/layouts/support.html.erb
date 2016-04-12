@@ -2,13 +2,15 @@
 <html>
 <head>
   <title>InnovationWeek</title>
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <%= stylesheet_link_tag 'style', media: 'all', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body id='central-do-cliente'>
 
 <%= yield %>
 
-<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+<script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+<%= javascript_include_tag 'support', 'data-turbolinks-track' => true %>
 </body>
 </html>

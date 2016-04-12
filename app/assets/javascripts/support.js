@@ -5,23 +5,12 @@
 
 var User = {
   attributes: {
-    "login":"p1m3nt3l",
+    "login":"Renato",
     "password": "inicial1234",
-    "type": "Doodle::User::Customer"
-  },
-
-  create: function() {
-    var request = $.post("http://localhost:3000/doodle/users", { "user": this.attributes })
-
-    request.success(function(user) {
-      console.log('user created with success.');
-      console.log(user);
-      return user;
-    });
+    "type": "Doodle::User::Analyst"
   },
 
   authenticate: function() {
-
     var request = $.post("http://localhost:3000/doodle/authenticate", { "auth": this.attributes })
 
     // response returns a object containing login and session_token attributes.
@@ -36,7 +25,14 @@ var Chat = {
   sessionToken: null,
   conversationId: null,
   currentUser: null,
-  connection: null,
+
+  getSenderName: function(sender) {
+    if (sender.name == null) {
+      return sender.user_id;
+    } else {
+      return sender.name;
+    }
+  },
 
   openWindow: function() {
     $('.dc-launch').hide();
@@ -44,11 +40,7 @@ var Chat = {
 
     Chat.displayQueueOptions();
   },
-
-  logout: function() {
-    this.connection.close();
-  },
-
+  
   displayQueueOptions: function() {
     var dropdown = $('#queue_options');
 
@@ -71,20 +63,69 @@ var Chat = {
     return queues;
   },
 
+  connect: function(){
+    var ws = new WebSocket('wss://api.layer.com/websocket?session_token=' + Chat.sessionToken, 'layer-1.0');
+    console.log('connection established.');
+
+    ws.addEventListener('message', Conversation.messageHandler);
+      
+    $('.container-channel').hide( "slow", function(){
+      $('.dc-footer').show('slow');
+    });
+
+  },
+
   start: function() {
     console.log('Starting the chat..');
-    User.create();
 
     authentication = User.authenticate();
+    var queue_name = 'corporativo';
+    $.get('http://localhost:3000/doodle/chat/' + queue_name + '/has_protocols', function (response){
+      if (!response.has_protocols) {
+        $('.lw-status-queue').fadeIn();
+      } else {
+        $.post('http://localhost:3000/doodle/chat/' + queue_name + '/next', {login: User.attributes['login']}, function(conversation) {
+          console.log('O analista entrou na conversa: ' + conversation.conversation);
+          Chat.conversationId = conversation.conversation;
+          Chat.currentUser = User.attributes['login'];
+      
+          //render previous messages
+          $.post('http://localhost:3000/doodle/conversations/messages', {conversation_id: Chat.conversationId}, function(messages) {
+           
+            $.each(messages, function(index, message) {
+              parts = message.attributes.parts;
+                var status_message = 'read';
+                sender_name = Chat.getSenderName(message.attributes.sender);
+                  
+                  $.each(parts, function(index,message) {
+                    var new_message = '<div class="dc-messages-container">' +
+                          '<div class="dc-message message-client">' +
+                            '<div class="dc-content-message">' +
+                              '<span class="dc-name-user">' + sender_name + ':</span>' +
+                                '<p class="dc-text-message">' + message.body +'</p>' +
+                              '</div>' +
+                            '</div>' +
+                          '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                        '</div>'
 
-    // create a conversation on the selected queue
-    this.create();
+                    Chat.addMessage(new_message);
+                  });
+            });
+
+          });
+        });
+      }
+
+      Chat.connect();
+
+    });
+
   },
-  
+
   addMessage: function(message) {
     $('.dc-container-message').append(message)
   },
-
+  
   create: function() {
     var queue = $('#options').val();
     console.log('creating a chat on selected queue: ' + queue);
@@ -99,41 +140,6 @@ var Chat = {
 }
 
 var Conversation = {
-  create: function(params) {
-    console.log('Creating a conversation with params: ' + params);
-    request = $.post("http://localhost:3000/doodle/conversations", params);
-
-    request.success(function(response) {
-      Chat.conversationId = response.conversation_id;
-
-      console.log( response );
-      Chat.currentUser = User.attributes['login'];
-
-      console.log('conversation created with success.');
-      // {
-      // "protocol_id":2,
-      // "prococol_status":"waiting",
-      // "channel":"corporativo",
-      // "conversation_id":"layer:///conversations/ff6652e5-ac0c-4aa6-b494-9c1856f5f013"
-      // }
-      console.log(JSON.stringify(response));
-      console.log("Opening a WS with layer");
-
-      var ws = new WebSocket('wss://api.layer.com/websocket?session_token=' + Chat.sessionToken, 'layer-1.0');
-      Chat.connection = ws;
-      console.log('connection established.');
-      ws.addEventListener('message', Conversation.messageHandler);
-      $('.container-channel').hide( "slow", function(){
-        $('.dc-footer').show('slow');
-      });
-    });
-  },
-  close: function(){
-     $.post('http://localhost:3000/doodle/chat/finalize', {conversation_id: Chat.conversationId}, function(response) {
-      console.log('chamado finalizado');
-      console.log('response:' + response );
-     });
-  },
 
   messageHandler: function(event) {
     var message = JSON.parse(event.data);
@@ -175,7 +181,7 @@ var Conversation = {
           console.log("WEBSOCKET RECEIVED: " + JSON.stringify(message, false, 4));
         switch(message.object.type) {
           case "Message":
-            // handleUpdateMessage(message);
+            handleUpdateMessage(message);
             break;
           case "Conversation":
             Conversation.handleUpdateConversation(message);
@@ -192,28 +198,21 @@ var Conversation = {
      the message create process.
   */
   handleCreateMessage: function(message) {
-    var getSenderName = function(sender) {
-      if (sender.name == null) {
-        return sender.user_id;
-      } else {
-        return sender.name;
-      }
-    }
+    console.log('PASSOU');
     var sent_at = Conversation.formatDateTime(message.data.sent_at);
     var parts = message.data.parts;
     var sender = message.data.sender;
     var status_message = 'read';
-    sender_name = getSenderName(sender);
-
+    sender_name = Chat.getSenderName(sender);
     $.each(parts, function(index,message) {
       var new_message = '<div class="dc-messages-container">' +
-                          '<div class="dc-message message-client">' +
+                          '<div class="dc-message message-analyst">' +
                             '<div class="dc-content-message">' +
                               '<span class="dc-name-user">' + sender_name + ':</span>' +
                                 '<p class="dc-text-message">' + message.body +'</p>' +
                               '</div>' +
                             '</div>' +
-                          '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                          '<span class="dc-type-indication dc-floating-left">' + status_message + '</span>' +
                         '</div>'
 
       Chat.addMessage(new_message);
@@ -226,15 +225,20 @@ var Conversation = {
   */
   handleCreateConversation: function(message) {
     var participants = message.data.participants;
-    var created_at = formatDateTime(message.data.created_at);
-    var created_by = createdBy(chat.currentUser, participants);
-    var new_message =   '<div class="lw-message-content">' +
-      '<h2 class="lw-user">' +
-      '<strong>' + created_by + '</strong>' + ' disse: ' +
-      '</h2>' +
-      '<p class="messages">' + 'Oi, eu sou Goku! Em que posso ajudar?' + '</p>' +
-      '<div class="lw-status">' + '<p>' + status_message + '</p>' + '</div>' +
-      '</div>'
+    var created_at = Conversation.formatDateTime(message.data.created_at);
+    var created_by = Conversation.createdBy(chat.currentUser, participants);
+    var new_message =
+    '<div class="dc-card card-welcome dc-card-color-white">' +
+      '<div class="dc-avatar-container">' +
+        '<div class="dc-avatar">' +
+          '<img src="dist/assets/images/avatar-castor.gif" alt="Avatar">' +
+        '</div>' +
+    '</div>' +
+  
+  '<div class="dc-welcome">' +
+    '<h1>Bem vindo à Locaweb!!</h1>' +
+    '<p>Bom dia, meu nome é <strong>Renato</strong>, sou analista da Locaweb. Como posso ajudá-lo(a)?</p>' +
+  '</div>'
     Chat.conversationId = message.data.id;
     Chat.addMessage(new_message);
   },
@@ -344,6 +348,7 @@ function sendMessage(e){
         }
       }
       console.log(attributes);
+
       //Post Message
       $.post('http://localhost:3000/doodle/messages', attributes, function(message) {
         console.log('message create');
@@ -369,7 +374,6 @@ $(document).ready(function() {
     $('open-chat-window').show();
   });
 
-
   function handleOpenWindow() {
     Chat.openWindow();
   };
@@ -378,9 +382,12 @@ $(document).ready(function() {
     Chat.start();
   }
 
-  $('.dc-close').click(function(){
-    Chat.logout();
-    Conversation.close();
-  })
+  var getSenderName = function(sender) {
+    if (sender.name == null) {
+      return sender.user_id;
+    } else {
+      return sender.name;
+    }
+  }
 
 });

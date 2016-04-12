@@ -56,16 +56,18 @@
       <div class="dc-button-channel" id="chat-start">
         <a class="waves-effect waves-light btn">Iniciar Chat</a>
       </div>
-
     </div>
 
+    <div class="dc-messages-container" id="messages-render">
+    </div>
+    
   </div>
 </div>
 <footer class="dc-footer">
       <div class="dc-container-form">
-        <form action="">
-          <textarea class="dc-text-area" name="message" placeholder="Qual sua dúvida?"></textarea>
-          <button id="dc-send" class="dc-btn-send"></button>
+        <form id="chat">
+          <textarea class="dc-text-area" name="message" id="message" placeholder="Qual sua dúvida?"></textarea>
+          <input type="submit" id="dc-send" class="dc-btn-send"></input>
         </form>
       </div>
 </footer>

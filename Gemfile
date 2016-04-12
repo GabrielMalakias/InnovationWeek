@@ -23,7 +23,6 @@ gem 'aasm'
 gem 'pry'
 
 gem 'activeadmin', '~> 1.0.0.pre2'
-gem "active_material", git: "https://github.com/vigetlabs/active_material.git"
 
 gem 'devise'
 

@@ -34,6 +34,7 @@ var User = {
 var Chat = {
   sessionToken: null,
   conversationId: null,
+  currentUser: null,
 
   openWindow: function() {
     $('.dc-launch').hide();
@@ -73,6 +74,10 @@ var Chat = {
     // create a conversation on the selected queue
     this.create();
   },
+  
+  addMessage: function(message) {
+    $('.dc-container-message').append(message)
+  },
 
   create: function() {
     var queue = $('#options').val();
@@ -93,6 +98,11 @@ var Conversation = {
     request = $.post("http://localhost:3000/doodle/conversations", params);
 
     request.success(function(response) {
+      Chat.conversationId = response.conversation_id;
+
+      console.log( response );
+      Chat.currentUser = User.attributes['login'];
+
       console.log('conversation created with success.');
       // {
       // "protocol_id":2,
@@ -104,8 +114,8 @@ var Conversation = {
       console.log("Opening a WS with layer");
 
       var ws = new WebSocket('wss://api.layer.com/websocket?session_token=' + Chat.sessionToken, 'layer-1.0');
-      ws.addEventListener('message', this.messageHandler);
-      $('.dc-container-message').hide( "slow", function(){
+      ws.addEventListener('message', Conversation.messageHandler);
+      $('.container-channel').hide( "slow", function(){
         $('.dc-footer').show('slow');
       });
     });
@@ -116,7 +126,7 @@ var Conversation = {
     var body = message.body;
     switch(message.type) {
       case "change":
-        this.handleChange(body);
+        Conversation.handleChange(body);
       break;
     }
   },
@@ -132,29 +142,29 @@ var Conversation = {
     try {
       switch(message.operation) {
         case "create":
-          console.log("WEBSOCKET CREATE: " + message.object.id);
+        console.log("WEBSOCKET CREATE: " + message.object.id);
         console.log("WEBSOCKET RECEIVED: " + JSON.stringify(message, false, 4));
         switch(message.object.type) {
           case "Message":
-            handleCreateMessage(message);
+            Conversation.handleCreateMessage(message);
           break;
           case "Conversation":
-            handleCreateConversation(message);
+            Conversation.handleCreateConversation(message);
         }
         break;
         case "delete":
           console.log("WEBSOCKET DELETE: " + message.object.id);
-        console.log("WEBSOCKET RECEIVED: " + JSON.stringify(message, false, 4));
+          console.log("WEBSOCKET RECEIVED: " + JSON.stringify(message, false, 4));
         break;
         case "patch":
           console.log("WEBSOCKET PATCH: " + message.object.id);
-        console.log("WEBSOCKET RECEIVED: " + JSON.stringify(message, false, 4));
+          console.log("WEBSOCKET RECEIVED: " + JSON.stringify(message, false, 4));
         switch(message.object.type) {
           case "Message":
             // handleUpdateMessage(message);
             break;
           case "Conversation":
-            handleUpdateConversation(message);
+            Conversation.handleUpdateConversation(message);
         }
         break;
       }
@@ -175,20 +185,23 @@ var Conversation = {
         return sender.name;
       }
     }
-    var sent_at = formatDateTime(message.data.sent_at);
+    var sent_at = Conversation.formatDateTime(message.data.sent_at);
     var parts = message.data.parts;
     var sender = message.data.sender;
-    var status_message = 'DELIVERING';
+    var status_message = 'read';
     sender_name = getSenderName(sender);
 
     $.each(parts, function(index,message) {
-      var new_message = '<div class="lw-message-content lw-client">' +
-        '<h2 class="lw-user">' +
-        '<strong>' + sender_name + '</strong>' + ' disse: ' +
-        '</h2>' +
-        '<p class="messages">' + message.body + '</p>' +
-        '<div class="lw-status">' + '<p>' + status_message + '</p>' + '</div>' +
-        '</div>'
+      var new_message = '<div class="dc-messages-container">' +
+                          '<div class="dc-message message-client">' +
+                            '<div class="dc-content-message">' +
+                              '<span class="dc-name-user">' + sender_name + ':</span>' +
+                                '<p class="dc-text-message">' + message.body +'</p>' +
+                              '</div>' +
+                            '</div>' +
+                          '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                        '</div>'
+
       Chat.addMessage(new_message);
     });
   },
@@ -232,7 +245,7 @@ var Conversation = {
         case "remove":
           switch(message_data['property']) {
           case "participants":
-            handleRemoveParticipants(message_data);
+            Conversation.handleRemoveParticipants(message_data);
         }
         break;
       }
@@ -286,6 +299,38 @@ var Conversation = {
   }
 
 }
+
+
+$('#chat').submit(function(e) {
+  e.preventDefault();
+  var message = $('#message').val();
+  var new_message = '<p class="dc-text-message">' + message + '</p>';
+  $('#message').val('');
+    // creating a message
+    attributes = {
+      conversation: {
+        id: Chat.conversationId,
+        sender: {
+          user_id: Chat.currentUser
+        },
+        parts: [
+          {
+            body: message,
+            mime_type: 'text/plain'
+          }
+        ]
+      }
+    }
+    console.log(attributes);
+    //Post Message
+    $.post('http://localhost:3000/doodle/messages', attributes, function(message) {
+      console.log('message create');
+      $('#message').val('');
+      $('#message')[0].focus();
+
+      console.log('message create passou');
+    });
+});
 
 $(document).ready(function() {
   $("#chat-box").hide();

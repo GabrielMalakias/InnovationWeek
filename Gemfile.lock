@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/GabrielMalakias/doodle_rails.git
-  revision: 131b2da4de97c41e808edb2c45c578a0c8b21c5e
+  revision: 2b2ec513e77128d55fc6987f94e9eee3ead643ab
   branch: dev
   specs:
     doodle_rails (0.0.1)

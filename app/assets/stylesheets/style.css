@@ -6503,3 +6503,24 @@ body {
   position: fixed;
   background-color: #fff;
   bottom: 0; }
+
+.container-channel {
+  padding: 20px;
+  margin: 25% 0;
+}
+
+.container-channel .input-field label {
+  position: initial;
+}
+
+.container-channel .browser-default {
+  margin: 15px 0;
+}
+
+.dc-button-channel {
+  width: 100%;
+}
+
+.dc-button-channel .waves-effect {
+  margin: 0 25%;
+}

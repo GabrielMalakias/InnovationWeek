@@ -300,36 +300,48 @@ var Conversation = {
 
 }
 
+$('#message').keyup(function(e){
+  e = e || event;
+  if (e.keyCode === 13 && !e.ctrlKey) {
+    sendMessage(e);
+  }
+  return true;
+});
+
+function sendMessage(e){
+    e.preventDefault();
+    var message = $('#message').val();
+    var new_message = '<p class="dc-text-message">' + message + '</p>';
+
+    $('#message').val('');
+      // creating a message
+      attributes = {
+        conversation: {
+          id: Chat.conversationId,
+          sender: {
+            user_id: Chat.currentUser
+          },
+          parts: [
+            {
+              body: message,
+              mime_type: 'text/plain'
+            }
+          ]
+        }
+      }
+      console.log(attributes);
+      //Post Message
+      $.post('http://localhost:3000/doodle/messages', attributes, function(message) {
+        console.log('message create');
+        $('#message').val('');
+        $('#message')[0].focus();
+
+        console.log('message create passou');
+      });
+}
 
 $('#chat').submit(function(e) {
-  e.preventDefault();
-  var message = $('#message').val();
-  var new_message = '<p class="dc-text-message">' + message + '</p>';
-  $('#message').val('');
-    // creating a message
-    attributes = {
-      conversation: {
-        id: Chat.conversationId,
-        sender: {
-          user_id: Chat.currentUser
-        },
-        parts: [
-          {
-            body: message,
-            mime_type: 'text/plain'
-          }
-        ]
-      }
-    }
-    console.log(attributes);
-    //Post Message
-    $.post('http://localhost:3000/doodle/messages', attributes, function(message) {
-      console.log('message create');
-      $('#message').val('');
-      $('#message')[0].focus();
-
-      console.log('message create passou');
-    });
+  sendMessage(e);
 });
 
 $(document).ready(function() {

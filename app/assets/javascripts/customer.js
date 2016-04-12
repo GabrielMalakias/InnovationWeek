@@ -105,7 +105,9 @@ var Conversation = {
 
       var ws = new WebSocket('wss://api.layer.com/websocket?session_token=' + Chat.sessionToken, 'layer-1.0');
       ws.addEventListener('message', this.messageHandler);
-      console.log('WS opened with success');
+      $('.dc-container-message').hide( "slow", function(){
+        $('.dc-footer').show('slow');
+      });
     });
   },
 

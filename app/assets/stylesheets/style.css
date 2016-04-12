@@ -6524,3 +6524,7 @@ body {
 .dc-button-channel .waves-effect {
   margin: 0 25%;
 }
+
+.dc-footer {
+  display: none;
+}

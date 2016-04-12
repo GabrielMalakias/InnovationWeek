@@ -6,12 +6,6 @@ GIT
     doodle_rails (0.0.1)
       rails (~> 4.2)
 
-GIT
-  remote: https://github.com/vigetlabs/active_material.git
-  revision: 8974af649767f68554889c48b140c9aa50fc1f70
-  specs:
-    active_material (1.4.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -245,7 +239,6 @@ PLATFORMS
 
 DEPENDENCIES
   aasm
-  active_material!
   activeadmin (~> 1.0.0.pre2)
   byebug
   coffee-rails (~> 4.1.0)
@@ -265,6 +258,3 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
-
-BUNDLED WITH
-   1.11.2

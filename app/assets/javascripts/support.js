@@ -24,14 +24,35 @@ var User = {
 }
 
 var Keywords = {
+  load: function(){
+    var request = $.get(api_url +"doodle/keywords");
+    console.log(response);
+  }
+}
 
-    load: function(){
-      var request = $.get(api_url +"doodle/keywords");
-      console.log(response);
+var Resume = {
+  customer_login: null,
+  created_at: null,
+  channel: null,
+
+  build: function(message) {
+    this.customer_login = Conversation.createdBy(Chat.currentUser, message.data.participants);
+    this.created_at     = Conversation.formatDateTime(message.data.created_at);
+
+    var text_message = 'Você está atendendo o usuário: ' + this.customer_login + '. Ele aguarda desde ' + this.created_at;
+    var new_message =
+      '<div class="welcome-message-analyst">' +
+        '<div class="dc-message message-welcome-analyst">' +
+            '<div class="dc-content-message">' +
+              '<p class="dc-text-message">' + text_message + '</p>' +
+            '</div>' +
+          '</div>' +
+      '</div>';
 
 
-    }
-} 
+    return new_message;
+  }
+}
 
 var Chat = {
   sessionToken: null,
@@ -47,6 +68,14 @@ var Chat = {
     } else {
       return sender.name;
     }
+  },
+
+  displayCustomerInfo: function(message) {
+    console.log('conversation resume:');
+    console.log(message);
+
+    var resume = Resume.build(message);
+    Chat.addMessage(resume);
   },
 
   openWindow: function() {
@@ -79,9 +108,9 @@ var Chat = {
       if (!response.has_protocols) {
         $('.lw-status-queue').fadeIn();
       } else {
-        $.post(api_url + 'doodle/chat/' + User.attributes["login"] + '/next', function(conversation) {
-          console.log('O analista entrou na conversa: ' + conversation.conversation);
-          Chat.conversationId = conversation.conversation;
+        $.post(api_url + 'doodle/chat/' + User.attributes["login"] + '/next', function(response) {
+          console.log('O analista entrou na conversa: ' + response.conversation);
+          Chat.conversationId = response.conversation;
           Chat.currentUser = User.attributes['login'];
 
           //render previous messages
@@ -155,6 +184,7 @@ var Chat = {
       $('.dc-footer').hide();
       $('.dc-controler-rank').hide();
       $('.dc-card-action').hide();
+      $('.welcome-message').hide();
       $('.container-channel').show();
     }, 5000);
   },
@@ -233,7 +263,6 @@ var Conversation = {
      the message create process.
   */
   handleCreateMessage: function(message) {
-    console.log('PASSOU');
     var sent_at = Conversation.formatDateTime(message.data.sent_at);
     var parts = message.data.parts;
     var sender = message.data.sender;
@@ -259,6 +288,8 @@ var Conversation = {
   the conversation create process
   */
   handleCreateConversation: function(message) {
+    console.log('preparing a customer resume to analyst..');
+    Chat.displayCustomerInfo(message);
   },
 
   /*
@@ -314,7 +345,7 @@ var Conversation = {
   */
   createdBy: function(current_user, participants) {
     for (var i=participants.length-1; i>=0; i--) {
-      if (participants[i] === chat.currentUser) {
+      if (participants[i] === Chat.currentUser) {
         participants.splice(1, 1);
         return participants[0];
       }
@@ -458,7 +489,7 @@ function renderCardForClient(message){
 
 
 function keywordMessage(message){
-  
+
  var message = '<div class="dc-messages-container">' +
                   '<div class="dc-message message-client">' +
                       '<div class="dc-content-message">' +

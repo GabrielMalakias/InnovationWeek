@@ -178,6 +178,7 @@ var Conversation = {
       ws.addEventListener('message', Conversation.messageHandler);
       $('.container-channel').fadeOut( "slow", function(){
         $('.dc-footer').fadeIn('slow');
+        $('.message-welcome').fadeIn('slow');
       });
     });
   },

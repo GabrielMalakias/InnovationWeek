@@ -60,8 +60,6 @@ var Chat = {
   start: function() {
     console.log('Starting the chat..');
 
-    authentication = User.authenticate();
-
     $.get(api_url +'doodle/chat/' + User.attributes["login"] + '/has_protocols', function (response){
       if (!response.has_protocols) {
         $('.lw-status-queue').fadeIn();
@@ -333,6 +331,8 @@ $('#chat').submit(function(e) {
 
 $(document).ready(function() {
   $("#chat-box").hide();
+
+  authentication = User.authenticate();
 
   $('#open-chat-window').click(handleOpenWindow);
   $('#chat-start').click(handleStartChat);

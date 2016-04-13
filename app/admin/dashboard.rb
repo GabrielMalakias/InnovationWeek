@@ -18,7 +18,14 @@ ActiveAdmin.register_page "Dashboard" do
             end
           end
         end
-     end
+
+        panel 'Métricas' do
+          table_for Doodle::ReportsHelper.service_metrics do
+            column :service_time
+            column :waiting_time
+          end
+        end
+      end
 
       column do
         panel 'Protocolos' do

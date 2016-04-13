@@ -26,7 +26,7 @@ gem 'activeadmin', '~> 1.0.0.pre2'
 
 gem 'devise'
 
-gem 'doodle_rails', git: 'https://github.com/GabrielMalakias/doodle_rails.git', branch: 'dev'
+gem 'doodle_rails', path: '~/projects/gabriel/doodle_rails' #git: 'https://github.com/GabrielMalakias/doodle_rails.git', branch: 'dev'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks

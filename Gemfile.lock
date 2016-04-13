@@ -1,7 +1,5 @@
-GIT
-  remote: https://github.com/GabrielMalakias/doodle_rails.git
-  revision: dd42f7bb12667865965eec413c32f73777cf002a
-  branch: dev
+PATH
+  remote: ~/projects/gabriel/doodle_rails
   specs:
     doodle_rails (0.0.1)
       rails (~> 4.2)

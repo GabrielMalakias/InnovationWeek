@@ -1,5 +1,7 @@
-PATH
-  remote: ~/Workspace/ruby/doodle_rails
+GIT
+  remote: https://github.com/GabrielMalakias/doodle_rails.git
+  revision: b44beed189ddeaf63a20f3c9c290c42e1eed62f4
+  branch: dev
   specs:
     doodle_rails (0.0.1)
       rails (~> 4.2)
@@ -256,3 +258,6 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
+
+BUNDLED WITH
+   1.11.2

@@ -23,12 +23,23 @@ var User = {
   }
 }
 
+var Keywords = {
+
+    load: function(){
+      var request = $.get(api_url +"doodle/keywords");
+      console.log(response);
+
+
+    }
+} 
+
 var Chat = {
   sessionToken: null,
   conversationId: null,
   currentUser: null,
   connection: null,
   actionKeyword: null,
+  textKeyword: null,
 
   getSenderName: function(sender) {
     if (sender.name == null) {
@@ -334,14 +345,14 @@ $('#message').keyup(function(e){
 
 function sendMessage(e){
 
-  var readMessage = $('#message').val();
+  var message = $('#message').val();
   
-  if (readMessage) {
-    isActionKeyword(readMessage);
+  if (message) {
+    isActionKeyword(message);
+    message = translateTextKeyword(message)
   }
 
   e.preventDefault();
-  var message = $('#message').val();
   var new_message = '<p class="dc-text-message">' + message + '</p>';
 
   $('#message').val('');
@@ -376,7 +387,7 @@ function isActionKeyword (message){
     var result = message.match('\^\/');
     if (result) {
       var sanitizeMessage = message.replace('/', '').trim();
-      if ( isActionInList(sanitizeMessage, Chat.actionKeyword)) {
+      if ( isKeywordInList(sanitizeMessage, Chat.actionKeyword)) {
         console.log('é uma keyword action');
         renderCardForClient(sanitizeMessage);
       }
@@ -384,6 +395,20 @@ function isActionKeyword (message){
       console.log('não é uma keyword action');
     }
 
+}
+
+function translateTextKeyword (message){
+    var result = message.match('^[#]\\w+');
+    if (result) {
+      var sanitizeMessage = message.replace('#', '').trim();
+      if ( isKeywordInList(sanitizeMessage, Chat.textKeyword)) {
+        console.log('é uma keyword text');
+        return $.grep(Chat.textKeyword, function(e) { return e.name == sanitizeMessage; })[0].value;
+      }
+    } else {
+      console.log('não é uma keyword text');
+    }
+    return message;
 }
 
 function cardComponent(object) {
@@ -427,7 +452,7 @@ function renderCardForClient(message){
 
 }
 
-function isActionInList (message, list) {
+function isKeywordInList (message, list) {
 
   var result = false;
   list.forEach(function(keyword){
@@ -476,6 +501,9 @@ $(document).ready(function() {
     // get keywords
     $.get( api_url + 'doodle/keywords/all_actions', function( response ) {
       Chat.actionKeyword = response;
+    });
+    $.get( api_url + 'doodle/keywords', function( response ) {
+      Chat.textKeyword = response;
     });
   }
 

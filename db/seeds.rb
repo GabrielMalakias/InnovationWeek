@@ -27,6 +27,19 @@ Doodle::Channel.create!(name: 'Hospedagem')
 puts '.'
 Doodle::Channel.create!(name: 'Email')
 
+print 'Creating text keywords'
+print '.'
+Doodle::Keyword::Text.create!(name: 'bomdia', value: 'Bom dia! Bem vindo a Locaweb. Em que posso ajudá-lo ?')
+print '.'
+Doodle::Keyword::Text.create!(name: 'boatarde', value: 'Boa tarde! Bem vindo a Locaweb. Em que posso ajudá-lo ?')
+print '.'
+Doodle::Keyword::Text.create!(name: 'boanoite', value: 'Boa noite! Bem vindo a Locaweb. Em que posso ajudá-lo ?')
+print '.'
+Doodle::Keyword::Text.create!(name: 'castor', value: '<img src="http://statics.1wallpaper.net/thumbimg/20150531/beaver-face-teeth-fur.jpg" />')
+
+
+
+
 print 'Assigning analysts to channels'
 analyst = Doodle::User::Analyst.where(login: 'renato').first
 analyst.channels << Doodle::Channel.all

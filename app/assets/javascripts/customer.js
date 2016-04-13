@@ -78,6 +78,23 @@ var Chat = {
     this.addMessage(new_message);
   },
 
+  displayThanksMessage: function() {
+    var message =
+      '<div class="dc-card card-finish dc-card-color-white">' +
+        '<div class="dc-avatar-container">' +
+          '<div class="dc-avatar">' +
+            '<img src="dist/assets/images/avatar-castor.gif" alt="Avatar">' +
+          '</div>' +
+        '</div>' +
+        '<div class="dc-welcome">' +
+          '<h1>A Locaweb agradece seu contato!</h1>' +
+          '<p>Muito obrigado pelo seu contato! É sempre um prazer ajudar um Locaweber!</p>' +
+        '</div>' +
+      '</div>'
+
+    Chat.addMessage(message);
+  },
+
   channels: function() {
     var options = $("#options");
 
@@ -151,8 +168,8 @@ var Conversation = {
     });
   },
   close: function(){
-     $.post(api_url +'doodle/chat/finalize', { conversation_id: Chat.conversationId }, function(response) {
-      console.log('chamado finalizado');
+     $.post(api_url +'doodle/chat/finalize', { conversation_id: Chat.conversationId, login: Chat.currentUser }, function(response) {
+      console.log('chamado finalizado pelo cliente');
       console.log('response:' + response );
      });
   },
@@ -310,6 +327,7 @@ var Conversation = {
     if (participants.indexOf(chat.currentUser) == -1) {
       console.log('it seems the chat was closed by the analyst.');
       Chat.logout();
+      Chat.displayThanksMessage();
     }
   },
 

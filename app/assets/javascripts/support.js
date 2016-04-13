@@ -339,38 +339,38 @@ function sendMessage(e){
 
   if (readMessage) {
     isActionKeyword(readMessage);
-  }
+  } else { 
+    e.preventDefault();
+    var message = $('#message').val();
+    var new_message = '<p class="dc-text-message">' + message + '</p>';
 
-  e.preventDefault();
-  var message = $('#message').val();
-  var new_message = '<p class="dc-text-message">' + message + '</p>';
-
-  $('#message').val('');
-    // creating a message
-    attributes = {
-      conversation: {
-        id: Chat.conversationId,
-        sender: {
-          user_id: Chat.currentUser
-        },
-        parts: [
-          {
-            body: message,
-            mime_type: 'text/plain'
-          }
-        ]
+    $('#message').val('');
+      // creating a message
+      attributes = {
+        conversation: {
+          id: Chat.conversationId,
+          sender: {
+            user_id: Chat.currentUser
+          },
+          parts: [
+            {
+              body: message,
+              mime_type: 'text/plain'
+            }
+          ]
+        }
       }
-    }
-    console.log(attributes);
+      console.log(attributes);
 
-    //Post Message
-    $.post(api_url +'doodle/messages', attributes, function(message) {
-      console.log('message create');
-      $('#message').val('');
-      $('#message')[0].focus();
+      //Post Message
+      $.post(api_url +'doodle/messages', attributes, function(message) {
+        console.log('message create');
+        $('#message').val('');
+        $('#message')[0].focus();
 
-      console.log('message create passou');
-    });
+        console.log('message create passou');
+      });
+  }
 }
 
 function isActionKeyword (message){
@@ -427,6 +427,22 @@ function renderCardForClient(message){
   });
 
 }
+
+function keywordMessage(message){
+  
+ var message = '<div class="dc-messages-container">' +
+                  '<div class="dc-message message-client">' +
+                      '<div class="dc-content-message">' +
+                        '<span class="dc-name-user">' + sender_name + ':</span>' +
+                        '<p class="dc-text-message">' + message.body +'</p>' +
+                      '</div>' +
+                    '</div>' +
+                    '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                '</div>'
+
+   Chat.addMessage(message);
+}
+
 
 function isActionInList (message, list) {
 

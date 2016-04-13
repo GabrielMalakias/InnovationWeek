@@ -6547,6 +6547,7 @@ body {
 .dc-controler-rank ul li {
   padding: 10px;
   display: inline-block;
+  cursor: pointer;
 }
 
 .dc-controler-rank li {
@@ -6561,4 +6562,13 @@ body {
 
 .dc-controler-rank i {
   display: block;
+}
+
+.message-keyword {
+  margin-left: 50px;
+  background-color: #ECEFF1;
+}
+
+.dc-type-indication {
+  display: none;
 }

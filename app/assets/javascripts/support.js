@@ -52,6 +52,11 @@ var Chat = {
 
   },
 
+  enableControls: function() {
+    $('.dc-controler-rank').show();
+  },
+
+
   start: function() {
     console.log('Starting the chat..');
 
@@ -97,6 +102,7 @@ var Chat = {
 
       Chat.connect();
 
+      Chat.enableControls();
     });
 
   },

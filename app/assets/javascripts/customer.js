@@ -3,6 +3,8 @@
 //= require turbolinks
 //= require scripts
 
+var api_url = "http://localhost:3000/"
+
 var User = {
   attributes: {
     "login":"p1m3nt3l",
@@ -11,7 +13,7 @@ var User = {
   },
 
   create: function() {
-    var request = $.post("http://localhost:3000/doodle/users", { "user": this.attributes })
+    var request = $.post(api_url + "doodle/users", { "user": this.attributes })
 
     request.success(function(user) {
       console.log('user created with success.');
@@ -22,7 +24,7 @@ var User = {
 
   authenticate: function() {
 
-    var request = $.post("http://localhost:3000/doodle/authenticate", { "auth": this.attributes })
+    var request = $.post(api_url + "doodle/authenticate", { "auth": this.attributes })
 
     // response returns a object containing login and session_token attributes.
     request.success(function(response) {
@@ -39,8 +41,8 @@ var Chat = {
   connection: null,
 
   openWindow: function() {
-    $('.dc-launch').hide();
-    $('#chat-box').show();
+    $('.dc-launch').hide('slow');
+    $('#chat-box').fadeIn('slow');
 
     Chat.displayQueueOptions();
   },
@@ -50,25 +52,45 @@ var Chat = {
   },
 
   displayQueueOptions: function() {
-    var dropdown = $('#queue_options');
-
-    dropdown.show();
-
-    var queues = Chat.queues();
-
-    $.each(queues, function() {
-      $("#options").append($("<option />").val(this).text(this));
-    });
+    $('#queue_options').show();
+    Chat.channels();
   },
 
-  queues: function() {
-    var queues = [
-      'host',
-      'email',
-      'corporativo'
-    ];
+  displayWelcomeMessage: function(message) {
+    console.log('display welcome message..');
+    console.log(message);
+    console.log('conversation_id: ' + message.object.id);
+    var analyst_name = message.data[0].value;
+    var new_message =
+    '<div class="dc-card card-welcome dc-card-color-white">' +
+      '<div class="dc-avatar-container">' +
+        '<div class="dc-avatar">' +
+          '<img src="dist/assets/images/avatar-castor.gif" alt="Avatar">' +
+        '</div>' +
+    '</div>' +
 
-    return queues;
+    '<div class="dc-welcome">' +
+      '<h1>Bem vindo à Locaweb!!</h1>' +
+      '<p>Bom dia, meu nome é <strong>' + analyst_name + '</strong>, sou analista da Locaweb. Como posso ajudá-lo(a)?</p>' +
+    '</div>'
+
+    this.conversationId = message.object.id;
+    this.addMessage(new_message);
+  },
+
+  channels: function() {
+    var options = $("#options");
+
+    var request = $.get(api_url + "doodle/channels")
+
+    request.success(function(response){
+      console.log(response);
+      options.remove(".channel");
+
+      $.each(response, function() {
+        $("#options").append($("<option class='channel' />").val(this.id).text(this.name));
+      });
+    });
   },
 
   start: function() {
@@ -80,17 +102,17 @@ var Chat = {
     // create a conversation on the selected queue
     this.create();
   },
-  
+
   addMessage: function(message) {
-    $('.dc-container-message').append(message)
+    $('.dc-container-message').append(message);
   },
 
   create: function() {
-    var queue = $('#options').val();
-    console.log('creating a chat on selected queue: ' + queue);
+    var channel = $('#options').val();
+    console.log('creating a chat on selected channel: ' + channel);
 
     var params = {
-      channel: queue,
+      channel_id: channel,
       login: User.attributes['login']
     }
 
@@ -101,7 +123,7 @@ var Chat = {
 var Conversation = {
   create: function(params) {
     console.log('Creating a conversation with params: ' + params);
-    request = $.post("http://localhost:3000/doodle/conversations", params);
+    request = $.post(api_url +"doodle/conversations", params);
 
     request.success(function(response) {
       Chat.conversationId = response.conversation_id;
@@ -123,13 +145,13 @@ var Conversation = {
       Chat.connection = ws;
       console.log('connection established.');
       ws.addEventListener('message', Conversation.messageHandler);
-      $('.container-channel').hide( "slow", function(){
-        $('.dc-footer').show('slow');
+      $('.container-channel').fadeOut( "slow", function(){
+        $('.dc-footer').fadeIn('slow');
       });
     });
   },
   close: function(){
-     $.post('http://localhost:3000/doodle/chat/finalize', {conversation_id: Chat.conversationId}, function(response) {
+     $.post(api_url +'doodle/chat/finalize', { conversation_id: Chat.conversationId }, function(response) {
       console.log('chamado finalizado');
       console.log('response:' + response );
      });
@@ -154,6 +176,7 @@ var Conversation = {
   */
   handleChange: function(message) {
     try {
+      console.log(message.operation)
       switch(message.operation) {
         case "create":
         console.log("WEBSOCKET CREATE: " + message.object.id);
@@ -225,18 +248,18 @@ var Conversation = {
   the conversation create process
   */
   handleCreateConversation: function(message) {
-    var participants = message.data.participants;
-    var created_at = formatDateTime(message.data.created_at);
-    var created_by = createdBy(chat.currentUser, participants);
-    var new_message =   '<div class="lw-message-content">' +
-      '<h2 class="lw-user">' +
-      '<strong>' + created_by + '</strong>' + ' disse: ' +
-      '</h2>' +
-      '<p class="messages">' + 'Oi, eu sou Goku! Em que posso ajudar?' + '</p>' +
-      '<div class="lw-status">' + '<p>' + status_message + '</p>' + '</div>' +
-      '</div>'
-    Chat.conversationId = message.data.id;
-    Chat.addMessage(new_message);
+    // var participants = message.data.participants;
+    // var created_at = formatDateTime(message.data.created_at);
+    // var created_by = createdBy(chat.currentUser, participants);
+    // var new_message =   '<div class="lw-message-content">' +
+    //   '<h2 class="lw-user">' +
+    //   '<strong>' + created_by + '</strong>' + ' disse: ' +
+    //   '</h2>' +
+    //   '<p class="messages">' + 'Oi, eu sou Goku! Em que posso ajudar?' + '</p>' +
+    //   '<div class="lw-status">' + '<p>' + status_message + '</p>' + '</div>' +
+    //   '</div>'
+    // Chat.conversationId = message.data.id;
+    // Chat.addMessage(new_message);
   },
 
   /*
@@ -255,6 +278,7 @@ var Conversation = {
           // handle add operation
           // it may be adding a new participant or maybe some other property.
           console.log('adicionou um participante..');
+          Chat.displayWelcomeMessage(message);
         break;
         case "remove":
           switch(message_data['property']) {
@@ -359,16 +383,23 @@ $('#chat').submit(function(e) {
 });
 
 $(document).ready(function() {
-  $("#chat-box").hide();
+  $("#chat-box").fadeOut('slow');
 
   $('#open-chat-window').click(handleOpenWindow);
+
   $('#chat-start').click(handleStartChat);
 
   $('.dc-minimize').click(function(){
-    $("#chat-box").hide();
-    $('open-chat-window').show();
+    $("#chat-box").fadeOut('slow', function(){
+      $("#open-chat-window").fadeIn('fast');
+    });
   });
 
+  function closeScreen(){
+    $("#chat-box").fadeOut('slow', function(){
+      $("#open-chat-window").fadeIn('fast');
+    });
+  }
 
   function handleOpenWindow() {
     Chat.openWindow();
@@ -381,6 +412,7 @@ $(document).ready(function() {
   $('.dc-close').click(function(){
     Chat.logout();
     Conversation.close();
-  })
+    closeScreen();
+  });
 
 });

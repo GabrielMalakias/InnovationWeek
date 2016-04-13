@@ -18,29 +18,33 @@ ActiveAdmin.register_page "Dashboard" do
             end
           end
         end
+
+        panel 'Métricas' do
+        end
       end
 
       column do
         panel 'Protocolos' do
-          panel  "Waiting"
-          table_for Doodle::ReportsHelper.protocol_with_status(Doodle::Protocol::STATUSES[:waiting]) do
-            column :name
-            column :number
+          panel  "Waiting" do
+            table_for Doodle::ReportsHelper.protocol_with_status(Doodle::Protocol::STATUSES[:waiting]) do
+              column :name
+              column :number
+            end
+          end
+          panel  "In Progress" do
+            table_for Doodle::ReportsHelper.protocol_with_status(Doodle::Protocol::STATUSES[:in_progress]) do
+              column :name
+              column :number
+            end
+          end
+          panel  "Finalized" do
+            table_for Doodle::ReportsHelper.protocol_with_status(Doodle::Protocol::STATUSES[:finalized]) do
+              column :name
+              column :number
+            end
           end
         end
-        panel  "In Progress" do
-          table_for Doodle::ReportsHelper.protocol_with_status(Doodle::Protocol::STATUSES[:in_progress]) do
-            column :name
-            column :number
-          end
-        end
-        panel  "Finalized" do
-          table_for Doodle::ReportsHelper.protocol_with_status(Doodle::Protocol::STATUSES[:finalized]) do
-            column :name
-            column :number
-          end
-        end
-       end
+      end
     end
   end
 end

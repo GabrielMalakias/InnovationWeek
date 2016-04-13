@@ -5,4 +5,8 @@ Rails.application.routes.draw do
 
   get '/support',  to: 'supports#index'
   get '/customer', to: 'customers#index'
+
+  namespace :admin do
+    get :doodle_histories
+  end
 end

@@ -25,7 +25,14 @@ var Chat = {
   sessionToken: null,
   conversationId: null,
   currentUser: null,
-  connection: null,
+
+  getSenderName: function(sender) {
+    if (sender.name == null) {
+      return sender.user_id;
+    } else {
+      return sender.name;
+    }
+  },
 
   openWindow: function() {
     $('.dc-launch').hide();
@@ -33,10 +40,7 @@ var Chat = {
 
     Chat.displayQueueOptions();
   },
-  logout: function() {
-    this.connection.close();
-  },
-
+  
   displayQueueOptions: function() {
     var dropdown = $('#queue_options');
 
@@ -59,16 +63,20 @@ var Chat = {
     return queues;
   },
 
+  connect: function(){
+    var ws = new WebSocket('wss://api.layer.com/websocket?session_token=' + Chat.sessionToken, 'layer-1.0');
+    console.log('connection established.');
+
+    ws.addEventListener('message', Conversation.messageHandler);
+      
+    $('.container-channel').hide( "slow", function(){
+      $('.dc-footer').show('slow');
+    });
+
+  },
+
   start: function() {
     console.log('Starting the chat..');
-
-    var getSenderName = function(sender) {
-      if (sender.name == null) {
-        return sender.user_id;
-      } else {
-        return sender.name;
-      }
-    },
 
     authentication = User.authenticate();
     var queue_name = 'corporativo';
@@ -79,6 +87,7 @@ var Chat = {
         $.post('http://localhost:3000/doodle/chat/' + queue_name + '/next', {login: User.attributes['login']}, function(conversation) {
           console.log('O analista entrou na conversa: ' + conversation.conversation);
           Chat.conversationId = conversation.conversation;
+          Chat.currentUser = User.attributes['login'];
       
           //render previous messages
           $.post('http://localhost:3000/doodle/conversations/messages', {conversation_id: Chat.conversationId}, function(messages) {
@@ -86,7 +95,7 @@ var Chat = {
             $.each(messages, function(index, message) {
               parts = message.attributes.parts;
                 var status_message = 'read';
-                sender_name = getSenderName(message.attributes.sender);
+                sender_name = Chat.getSenderName(message.attributes.sender);
                   
                   $.each(parts, function(index,message) {
                     var new_message = '<div class="dc-messages-container">' +
@@ -106,10 +115,11 @@ var Chat = {
           });
         });
       }
+
+      Chat.connect();
+
     });
 
-    // create a conversation on the selected queue
-    this.create();
   },
 
   addMessage: function(message) {
@@ -130,36 +140,6 @@ var Chat = {
 }
 
 var Conversation = {
-  create: function(params) {
-    console.log('Creating a conversation with params: ' + params);
-    request = $.post("http://localhost:3000/doodle/conversations", params);
-
-    request.success(function(response) {
-      Chat.conversationId = response.conversation_id;
-
-      console.log( response );
-      Chat.currentUser = User.attributes['login'];
-
-      console.log('conversation created with success.');
-      // {
-      // "protocol_id":2,
-      // "prococol_status":"waiting",
-      // "channel":"corporativo",
-      // "conversation_id":"layer:///conversations/ff6652e5-ac0c-4aa6-b494-9c1856f5f013"
-      // }
-      console.log(JSON.stringify(response));
-      console.log("Opening a WS with layer");
-
-      var ws = new WebSocket('wss://api.layer.com/websocket?session_token=' + Chat.sessionToken, 'layer-1.0');
-      Chat.connection = ws;
-      console.log('connection established.');
-
-      ws.addEventListener('message', Conversation.messageHandler);
-      $('.container-channel').hide( "slow", function(){
-        $('.dc-footer').show('slow');
-      });
-    });
-  },
 
   messageHandler: function(event) {
     var message = JSON.parse(event.data);
@@ -201,7 +181,7 @@ var Conversation = {
           console.log("WEBSOCKET RECEIVED: " + JSON.stringify(message, false, 4));
         switch(message.object.type) {
           case "Message":
-            // handleUpdateMessage(message);
+            handleUpdateMessage(message);
             break;
           case "Conversation":
             Conversation.handleUpdateConversation(message);
@@ -218,19 +198,12 @@ var Conversation = {
      the message create process.
   */
   handleCreateMessage: function(message) {
-    var getSenderName = function(sender) {
-      if (sender.name == null) {
-        return sender.user_id;
-      } else {
-        return sender.name;
-      }
-    }
+    console.log('PASSOU');
     var sent_at = Conversation.formatDateTime(message.data.sent_at);
     var parts = message.data.parts;
     var sender = message.data.sender;
     var status_message = 'read';
-    sender_name = getSenderName(sender);
-
+    sender_name = Chat.getSenderName(sender);
     $.each(parts, function(index,message) {
       var new_message = '<div class="dc-messages-container">' +
                           '<div class="dc-message message-analyst">' +
@@ -375,6 +348,7 @@ function sendMessage(e){
         }
       }
       console.log(attributes);
+
       //Post Message
       $.post('http://localhost:3000/doodle/messages', attributes, function(message) {
         console.log('message create');
@@ -394,6 +368,11 @@ $(document).ready(function() {
 
   $('#open-chat-window').click(handleOpenWindow);
   $('#chat-start').click(handleStartChat);
+
+  $('.dc-minimize').click(function(){
+    $("#chat-box").hide();
+    $('open-chat-window').show();
+  });
 
   function handleOpenWindow() {
     Chat.openWindow();

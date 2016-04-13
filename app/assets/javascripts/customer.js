@@ -46,7 +46,7 @@ var Chat = {
   },
 
   logout: function() {
-    connection.close();
+    this.connection.close();
   },
 
   displayQueueOptions: function() {
@@ -127,6 +127,12 @@ var Conversation = {
         $('.dc-footer').show('slow');
       });
     });
+  },
+  close: function(){
+     $.post('http://localhost:3000/doodle/chat/finalize', {conversation_id: Chat.conversationId}, function(response) {
+      console.log('chamado finalizado');
+      console.log('response:' + response );
+     });
   },
 
   messageHandler: function(event) {
@@ -276,7 +282,7 @@ var Conversation = {
     console.log(message.value);
     if (participants.indexOf(chat.currentUser) == -1) {
       console.log('it seems the chat was closed by the analyst.');
-      chat.logout();
+      Chat.logout();
     }
   },
 
@@ -358,6 +364,12 @@ $(document).ready(function() {
   $('#open-chat-window').click(handleOpenWindow);
   $('#chat-start').click(handleStartChat);
 
+  $('.dc-minimize').click(function(){
+    $("#chat-box").hide();
+    $('open-chat-window').show();
+  });
+
+
   function handleOpenWindow() {
     Chat.openWindow();
   };
@@ -368,6 +380,7 @@ $(document).ready(function() {
 
   $('.dc-close').click(function(){
     Chat.logout();
+    Conversation.close();
   })
 
 });

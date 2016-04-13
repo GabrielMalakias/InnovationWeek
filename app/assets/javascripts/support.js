@@ -127,8 +127,24 @@ var Chat = {
 
   close: function() {
     Conversation.close();
+
     this.logout();
-    this.addMessage('<p>Chamado finalizado com sucesso</p>');
+
+    var message =
+      '<div class="dc-messages-container">' +
+      '<div class="dc-message message-system">' +
+        '<div class="dc-content-message">' +
+          '<p class="dc-text-message"><strong>Chamado finalizado com sucesso.</strong></p>' +
+      '</div></div></div>';
+
+    Chat.addMessage(message);
+
+    setTimeout(function() {
+      $('.dc-messages-container').remove();
+      $('.dc-footer').hide();
+      $('.dc-controler-rank').hide();
+      $('.container-channel').show();
+    }, 5000);
   },
 
   logout: function() {

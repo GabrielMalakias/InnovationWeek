@@ -51,6 +51,20 @@ var Chat = {
     this.connection.close();
   },
 
+  close: function() {
+    this.logout();
+    this.displayThanksMessage();
+
+    setTimeout(function() {
+      $('.dc-messages').hide();
+      $('.dc-messages-container').hide();
+      $('.dc-card').hide();
+      $('.dc-footer').hide();
+      $('.container-channel').show();
+    }, 5000);
+
+  },
+
   displayQueueOptions: function() {
     $('#queue_options').show();
     Chat.channels();
@@ -326,8 +340,7 @@ var Conversation = {
     console.log(message.value);
     if (participants.indexOf(chat.currentUser) == -1) {
       console.log('it seems the chat was closed by the analyst.');
-      Chat.logout();
-      Chat.displayThanksMessage();
+      Chat.close();
     }
   },
 

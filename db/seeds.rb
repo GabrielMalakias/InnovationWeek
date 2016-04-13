@@ -37,6 +37,9 @@ Doodle::Keyword::Text.create!(name: 'boanoite', value: 'Boa noite! Bem vindo a L
 print '.'
 Doodle::Keyword::Text.create!(name: 'castor', value: '<img src="http://statics.1wallpaper.net/thumbimg/20150531/beaver-face-teeth-fur.jpg" />')
 print '.'
+Doodle::Keyword::Text.create!(name: 'castor2', value: '<img src="http://rs1247.pbsrc.com/albums/gg623/Kung_Fu_Tofu/smallbeaver.gif~c200" />')
+print '.'
+
 Doodle::Keyword::Text.create!(name: 'manutencao', value: 'No momento alguns de nossos serviços estão em manutenção. Por gentileza acesse <a href=http://statusblog.locaweb.com.br/ target="_blank"> Status Blog Locaweb </a>.')
 print '.'
 

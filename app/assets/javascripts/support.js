@@ -35,8 +35,8 @@ var Chat = {
   },
 
   openWindow: function() {
-    $('.dc-launch').hide();
-    $('#chat-box').show();
+    $('.dc-launch').hide('slow');
+    $('#chat-box').fadeIn('slow');
 
     Chat.displayQueueOptions();
   },
@@ -69,8 +69,8 @@ var Chat = {
 
     ws.addEventListener('message', Conversation.messageHandler);
       
-    $('.container-channel').hide( "slow", function(){
-      $('.dc-footer').show('slow');
+    $('.container-channel').fadeOut( "slow", function(){
+      $('.dc-footer').fadeIn('slow');
     });
 
   },
@@ -370,9 +370,16 @@ $(document).ready(function() {
   $('#chat-start').click(handleStartChat);
 
   $('.dc-minimize').click(function(){
-    $("#chat-box").hide();
-    $('open-chat-window').show();
+    $("#chat-box").fadeOut('slow', function(){
+      $("#open-chat-window").fadeIn('fast');
+    });
   });
+
+  function closeScreen(){
+    $("#chat-box").fadeOut('slow', function(){
+      $("#open-chat-window").fadeIn('fast');
+    });
+  }
 
   function handleOpenWindow() {
     Chat.openWindow();
@@ -381,6 +388,12 @@ $(document).ready(function() {
   function handleStartChat() {
     Chat.start();
   }
+
+  $('.dc-close').click(function(){
+    closeScreen();
+    Chat.logout();
+    Conversation.close();
+  });
 
   var getSenderName = function(sender) {
     if (sender.name == null) {

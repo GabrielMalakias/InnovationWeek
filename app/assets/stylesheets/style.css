@@ -1,3 +1,5 @@
+@import url('mediaqueries');
+
 .materialize-red {
   background-color: #e51c23 !important; }
 
@@ -6532,3 +6534,4 @@ body {
 .dc-btn-send {
   color: transparent;
 }
+

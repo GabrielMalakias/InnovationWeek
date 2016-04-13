@@ -5,23 +5,12 @@
 
 var User = {
   attributes: {
-    "login":"p1m3nt3l",
+    "login":"Renato",
     "password": "inicial1234",
-    "type": "Doodle::User::Customer"
-  },
-
-  create: function() {
-    var request = $.post("http://localhost:3000/doodle/users", { "user": this.attributes })
-
-    request.success(function(user) {
-      console.log('user created with success.');
-      console.log(user);
-      return user;
-    });
+    "type": "Doodle::User::Analyst"
   },
 
   authenticate: function() {
-
     var request = $.post("http://localhost:3000/doodle/authenticate", { "auth": this.attributes })
 
     // response returns a object containing login and session_token attributes.
@@ -44,9 +33,8 @@ var Chat = {
 
     Chat.displayQueueOptions();
   },
-
   logout: function() {
-    connection.close();
+    this.connection.close();
   },
 
   displayQueueOptions: function() {
@@ -73,18 +61,61 @@ var Chat = {
 
   start: function() {
     console.log('Starting the chat..');
-    User.create();
+
+    var getSenderName = function(sender) {
+      if (sender.name == null) {
+        return sender.user_id;
+      } else {
+        return sender.name;
+      }
+    },
 
     authentication = User.authenticate();
+    var queue_name = 'corporativo';
+    $.get('http://localhost:3000/doodle/chat/' + queue_name + '/has_protocols', function (response){
+      if (!response.has_protocols) {
+        $('.lw-status-queue').fadeIn();
+      } else {
+        $.post('http://localhost:3000/doodle/chat/' + queue_name + '/next', {login: User.attributes['login']}, function(conversation) {
+          console.log('O analista entrou na conversa: ' + conversation.conversation);
+          Chat.conversationId = conversation.conversation;
+      
+          //render previous messages
+          $.post('http://localhost:3000/doodle/conversations/messages', {conversation_id: Chat.conversationId}, function(messages) {
+           
+            $.each(messages, function(index, message) {
+              parts = message.attributes.parts;
+                var status_message = 'read';
+                sender_name = getSenderName(message.attributes.sender);
+                  
+                  $.each(parts, function(index,message) {
+                    var new_message = '<div class="dc-messages-container">' +
+                          '<div class="dc-message message-client">' +
+                            '<div class="dc-content-message">' +
+                              '<span class="dc-name-user">' + sender_name + ':</span>' +
+                                '<p class="dc-text-message">' + message.body +'</p>' +
+                              '</div>' +
+                            '</div>' +
+                          '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                        '</div>'
+
+                    Chat.addMessage(new_message);
+                  });
+            });
+
+          });
+        });
+      }
+    });
 
     // create a conversation on the selected queue
     this.create();
   },
-  
+
   addMessage: function(message) {
     $('.dc-container-message').append(message)
   },
-
+  
   create: function() {
     var queue = $('#options').val();
     console.log('creating a chat on selected queue: ' + queue);
@@ -122,6 +153,7 @@ var Conversation = {
       var ws = new WebSocket('wss://api.layer.com/websocket?session_token=' + Chat.sessionToken, 'layer-1.0');
       Chat.connection = ws;
       console.log('connection established.');
+
       ws.addEventListener('message', Conversation.messageHandler);
       $('.container-channel').hide( "slow", function(){
         $('.dc-footer').show('slow');
@@ -201,13 +233,13 @@ var Conversation = {
 
     $.each(parts, function(index,message) {
       var new_message = '<div class="dc-messages-container">' +
-                          '<div class="dc-message message-client">' +
+                          '<div class="dc-message message-analyst">' +
                             '<div class="dc-content-message">' +
                               '<span class="dc-name-user">' + sender_name + ':</span>' +
                                 '<p class="dc-text-message">' + message.body +'</p>' +
                               '</div>' +
                             '</div>' +
-                          '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                          '<span class="dc-type-indication dc-floating-left">' + status_message + '</span>' +
                         '</div>'
 
       Chat.addMessage(new_message);
@@ -220,15 +252,20 @@ var Conversation = {
   */
   handleCreateConversation: function(message) {
     var participants = message.data.participants;
-    var created_at = formatDateTime(message.data.created_at);
-    var created_by = createdBy(chat.currentUser, participants);
-    var new_message =   '<div class="lw-message-content">' +
-      '<h2 class="lw-user">' +
-      '<strong>' + created_by + '</strong>' + ' disse: ' +
-      '</h2>' +
-      '<p class="messages">' + 'Oi, eu sou Goku! Em que posso ajudar?' + '</p>' +
-      '<div class="lw-status">' + '<p>' + status_message + '</p>' + '</div>' +
-      '</div>'
+    var created_at = Conversation.formatDateTime(message.data.created_at);
+    var created_by = Conversation.createdBy(chat.currentUser, participants);
+    var new_message =
+    '<div class="dc-card card-welcome dc-card-color-white">' +
+      '<div class="dc-avatar-container">' +
+        '<div class="dc-avatar">' +
+          '<img src="dist/assets/images/avatar-castor.gif" alt="Avatar">' +
+        '</div>' +
+    '</div>' +
+  
+  '<div class="dc-welcome">' +
+    '<h1>Bem vindo à Locaweb!!</h1>' +
+    '<p>Bom dia, meu nome é <strong>Renato</strong>, sou analista da Locaweb. Como posso ajudá-lo(a)?</p>' +
+  '</div>'
     Chat.conversationId = message.data.id;
     Chat.addMessage(new_message);
   },
@@ -276,7 +313,7 @@ var Conversation = {
     console.log(message.value);
     if (participants.indexOf(chat.currentUser) == -1) {
       console.log('it seems the chat was closed by the analyst.');
-      chat.logout();
+      Chat.logout();
     }
   },
 
@@ -366,8 +403,12 @@ $(document).ready(function() {
     Chat.start();
   }
 
-  $('.dc-close').click(function(){
-    Chat.logout();
-  })
+  var getSenderName = function(sender) {
+    if (sender.name == null) {
+      return sender.user_id;
+    } else {
+      return sender.name;
+    }
+  }
 
 });

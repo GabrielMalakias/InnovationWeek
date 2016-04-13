@@ -6535,3 +6535,30 @@ body {
   color: transparent;
 }
 
+.dc-controler-rank {
+  display: none;
+}
+
+.dc-controler-rank ul {
+  text-align: center;
+  margin: 0;
+}
+
+.dc-controler-rank ul li {
+  padding: 10px;
+  display: inline-block;
+}
+
+.dc-controler-rank li {
+  opacity: 0.3;
+  transition: opacity 0.5s ease;
+}
+
+.dc-controler-rank li:hover {
+  opacity: 1;
+}
+
+
+.dc-controler-rank i {
+  display: block;
+}

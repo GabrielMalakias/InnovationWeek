@@ -1,6 +1,8 @@
 ActiveAdmin.register_page "Dashboard" do
 
-  menu priority: 0, label: proc{ I18n.t("active_admin.dashboard") }
+  action_item :view_site do
+    link_to 'Refresh', ''
+  end
 
   content title: proc{ I18n.t("active_admin.dashboard") } do
     columns do

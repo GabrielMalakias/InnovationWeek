@@ -27,6 +27,7 @@ var Chat = {
   sessionToken: null,
   conversationId: null,
   currentUser: null,
+  connection: null,
 
   getSenderName: function(sender) {
     if (sender.name == null) {
@@ -44,6 +45,8 @@ var Chat = {
   connect: function(){
     var ws = new WebSocket('wss://api.layer.com/websocket?session_token=' + Chat.sessionToken, 'layer-1.0');
     console.log('connection established.');
+
+    Chat.connection = ws;
 
     ws.addEventListener('message', Conversation.messageHandler);
     $('.container-channel').fadeOut( "slow", function(){
@@ -119,10 +122,30 @@ var Chat = {
     }
 
     Conversation.create(params);
-  }
+  },
+
+  close: function() {
+    Conversation.close();
+    this.logout();
+    this.addMessage('<p>Chamado finalizado com sucesso</p>');
+  },
+
+  logout: function() {
+    this.connection.close();
+    console.log('ws connection terminated by analyst.');
+  },
+
+
 }
 
 var Conversation = {
+
+  close: function(){
+     $.post(api_url +'doodle/chat/finalize', { conversation_id: Chat.conversationId, login: Chat.currentUser }, function(response) {
+       console.log('chamado finalizado pelo analista');
+       console.log('response:' + response );
+     });
+  },
 
   messageHandler: function(event) {
     var message = JSON.parse(event.data);
@@ -359,8 +382,12 @@ $(document).ready(function() {
 
   $('.dc-close').click(function(){
     closeScreen();
-    Chat.logout();
-    Conversation.close();
+
+    Chat.close();
+  });
+
+  $('#close').click(function() {
+    Chat.close();
   });
 
   var getSenderName = function(sender) {

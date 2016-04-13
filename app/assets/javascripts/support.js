@@ -143,6 +143,7 @@ var Chat = {
       $('.dc-messages-container').remove();
       $('.dc-footer').hide();
       $('.dc-controler-rank').hide();
+      $('.dc-card-action').hide();
       $('.container-channel').show();
     }, 5000);
   },
@@ -335,7 +336,7 @@ $('#message').keyup(function(e){
 function sendMessage(e){
 
   var readMessage = $('#message').val();
-  
+
   if (readMessage) {
     isActionKeyword(readMessage);
   }
@@ -392,7 +393,7 @@ function cardComponent(object) {
                 '<i class="material-icons icon-mail">email</i>' +
                 '<h2>' + object.name + '</h2>' +
               '</div>' +
-  
+
               '<div class="dc-action-content">' +
                 '<ul class="dc-card-list dc-test-email">' +
                   '<li>IMAP</li>' +

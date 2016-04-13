@@ -18,10 +18,7 @@ ActiveAdmin.register_page "Dashboard" do
             end
           end
         end
-
-        panel 'Métricas' do
-        end
-      end
+     end
 
       column do
         panel 'Protocolos' do

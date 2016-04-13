@@ -37,8 +37,8 @@ var Chat = {
   },
 
   openWindow: function() {
-    $('.dc-launch').hide();
-    $('#chat-box').show();
+    $('.dc-launch').hide('slow');
+    $('#chat-box').fadeIn('slow');
   },
 
   connect: function(){
@@ -46,9 +46,8 @@ var Chat = {
     console.log('connection established.');
 
     ws.addEventListener('message', Conversation.messageHandler);
-
-    $('.container-channel').hide( "slow", function(){
-      $('.dc-footer').show('slow');
+    $('.container-channel').fadeOut( "slow", function(){
+      $('.dc-footer').fadeIn('slow');
     });
 
   },
@@ -85,7 +84,9 @@ var Chat = {
                           '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
                         '</div>'
 
-                    Chat.addMessage(new_message);
+                    Chat.addMessage(new_message, function(){
+                      $('.dc-messages-container').fadeIn('slow');
+                    });
                   });
             });
 
@@ -347,9 +348,16 @@ $(document).ready(function() {
   $('#chat-start').click(handleStartChat);
 
   $('.dc-minimize').click(function(){
-    $("#chat-box").hide();
-    $('open-chat-window').show();
+    $("#chat-box").fadeOut('slow', function(){
+      $("#open-chat-window").fadeIn('fast');
+    });
   });
+
+  function closeScreen(){
+    $("#chat-box").fadeOut('slow', function(){
+      $("#open-chat-window").fadeIn('fast');
+    });
+  }
 
   function handleOpenWindow() {
     Chat.openWindow();
@@ -358,6 +366,12 @@ $(document).ready(function() {
   function handleStartChat() {
     Chat.start();
   }
+
+  $('.dc-close').click(function(){
+    closeScreen();
+    Chat.logout();
+    Conversation.close();
+  });
 
   var getSenderName = function(sender) {
     if (sender.name == null) {

@@ -277,14 +277,17 @@ var Conversation = {
         case "add":
           // handle add operation
           // it may be adding a new participant or maybe some other property.
-          console.log('adicionou um participante..');
-          Chat.displayWelcomeMessage(message);
+          switch(message_data['property']) {
+          case "participants":
+            console.log('adicionou um participante..');
+            Chat.displayWelcomeMessage(message);
+          }
         break;
         case "remove":
           switch(message_data['property']) {
           case "participants":
             Conversation.handleRemoveParticipants(message_data);
-        }
+          }
         break;
       }
     });

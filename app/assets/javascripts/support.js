@@ -56,6 +56,7 @@ var Chat = {
     console.log('Starting the chat..');
 
     authentication = User.authenticate();
+
     $.get(api_url +'doodle/chat/' + User.attributes["login"] + '/has_protocols', function (response){
       if (!response.has_protocols) {
         $('.lw-status-queue').fadeIn();
@@ -202,23 +203,6 @@ var Conversation = {
   the conversation create process
   */
   handleCreateConversation: function(message) {
-    var participants = message.data.participants;
-    var created_at = Conversation.formatDateTime(message.data.created_at);
-    var created_by = Conversation.createdBy(chat.currentUser, participants);
-    var new_message =
-    '<div class="dc-card card-welcome dc-card-color-white">' +
-      '<div class="dc-avatar-container">' +
-        '<div class="dc-avatar">' +
-          '<img src="dist/assets/images/avatar-castor.gif" alt="Avatar">' +
-        '</div>' +
-    '</div>' +
-
-  '<div class="dc-welcome">' +
-    '<h1>Bem vindo à Locaweb!!</h1>' +
-    '<p>Bom dia, meu nome é <strong>Renato</strong>, sou analista da Locaweb. Como posso ajudá-lo(a)?</p>' +
-  '</div>'
-    Chat.conversationId = message.data.id;
-    Chat.addMessage(new_message);
   },
 
   /*

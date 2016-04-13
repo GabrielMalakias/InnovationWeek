@@ -3,15 +3,17 @@
 //= require turbolinks
 //= require scripts
 
+var api_url = "http://localhost:3000/"
+
 var User = {
   attributes: {
-    "login":"Renato",
+    "login":"renato",
     "password": "inicial1234",
     "type": "Doodle::User::Analyst"
   },
 
   authenticate: function() {
-    var request = $.post("http://localhost:3000/doodle/authenticate", { "auth": this.attributes })
+    var request = $.post(api_url +"doodle/authenticate", { "auth": this.attributes })
 
     // response returns a object containing login and session_token attributes.
     request.success(function(response) {
@@ -37,30 +39,6 @@ var Chat = {
   openWindow: function() {
     $('.dc-launch').hide();
     $('#chat-box').show();
-
-    Chat.displayQueueOptions();
-  },
-  
-  displayQueueOptions: function() {
-    var dropdown = $('#queue_options');
-
-    dropdown.show();
-
-    var queues = Chat.queues();
-
-    $.each(queues, function() {
-      $("#options").append($("<option />").val(this).text(this));
-    });
-  },
-
-  queues: function() {
-    var queues = [
-      'host',
-      'email',
-      'corporativo'
-    ];
-
-    return queues;
   },
 
   connect: function(){
@@ -68,7 +46,7 @@ var Chat = {
     console.log('connection established.');
 
     ws.addEventListener('message', Conversation.messageHandler);
-      
+
     $('.container-channel').hide( "slow", function(){
       $('.dc-footer').show('slow');
     });
@@ -79,24 +57,23 @@ var Chat = {
     console.log('Starting the chat..');
 
     authentication = User.authenticate();
-    var queue_name = 'corporativo';
-    $.get('http://localhost:3000/doodle/chat/' + queue_name + '/has_protocols', function (response){
+    $.get(api_url +'doodle/chat/' + User.attributes["login"] + '/has_protocols', function (response){
       if (!response.has_protocols) {
         $('.lw-status-queue').fadeIn();
       } else {
-        $.post('http://localhost:3000/doodle/chat/' + queue_name + '/next', {login: User.attributes['login']}, function(conversation) {
+        $.post(api_url + 'doodle/chat/' + User.attributes["login"] + '/next', function(conversation) {
           console.log('O analista entrou na conversa: ' + conversation.conversation);
           Chat.conversationId = conversation.conversation;
           Chat.currentUser = User.attributes['login'];
-      
+
           //render previous messages
-          $.post('http://localhost:3000/doodle/conversations/messages', {conversation_id: Chat.conversationId}, function(messages) {
-           
+          $.post(api_url + 'doodle/conversations/messages', {conversation_id: Chat.conversationId}, function(messages) {
+
             $.each(messages, function(index, message) {
               parts = message.attributes.parts;
                 var status_message = 'read';
                 sender_name = Chat.getSenderName(message.attributes.sender);
-                  
+
                   $.each(parts, function(index,message) {
                     var new_message = '<div class="dc-messages-container">' +
                           '<div class="dc-message message-client">' +
@@ -125,7 +102,7 @@ var Chat = {
   addMessage: function(message) {
     $('.dc-container-message').append(message)
   },
-  
+
   create: function() {
     var queue = $('#options').val();
     console.log('creating a chat on selected queue: ' + queue);
@@ -234,7 +211,7 @@ var Conversation = {
           '<img src="dist/assets/images/avatar-castor.gif" alt="Avatar">' +
         '</div>' +
     '</div>' +
-  
+
   '<div class="dc-welcome">' +
     '<h1>Bem vindo à Locaweb!!</h1>' +
     '<p>Bom dia, meu nome é <strong>Renato</strong>, sou analista da Locaweb. Como posso ajudá-lo(a)?</p>' +
@@ -327,36 +304,36 @@ $('#message').keyup(function(e){
 });
 
 function sendMessage(e){
-    e.preventDefault();
-    var message = $('#message').val();
-    var new_message = '<p class="dc-text-message">' + message + '</p>';
+  e.preventDefault();
+  var message = $('#message').val();
+  var new_message = '<p class="dc-text-message">' + message + '</p>';
 
-    $('#message').val('');
-      // creating a message
-      attributes = {
-        conversation: {
-          id: Chat.conversationId,
-          sender: {
-            user_id: Chat.currentUser
-          },
-          parts: [
-            {
-              body: message,
-              mime_type: 'text/plain'
-            }
-          ]
-        }
+  $('#message').val('');
+    // creating a message
+    attributes = {
+      conversation: {
+        id: Chat.conversationId,
+        sender: {
+          user_id: Chat.currentUser
+        },
+        parts: [
+          {
+            body: message,
+            mime_type: 'text/plain'
+          }
+        ]
       }
-      console.log(attributes);
+    }
+    console.log(attributes);
 
-      //Post Message
-      $.post('http://localhost:3000/doodle/messages', attributes, function(message) {
-        console.log('message create');
-        $('#message').val('');
-        $('#message')[0].focus();
+    //Post Message
+    $.post(api_url +'doodle/messages', attributes, function(message) {
+      console.log('message create');
+      $('#message').val('');
+      $('#message')[0].focus();
 
-        console.log('message create passou');
-      });
+      console.log('message create passou');
+    });
 }
 
 $('#chat').submit(function(e) {
@@ -389,5 +366,4 @@ $(document).ready(function() {
       return sender.name;
     }
   }
-
 });

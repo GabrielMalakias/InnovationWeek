@@ -3,6 +3,8 @@
 //= require turbolinks
 //= require scripts
 
+var api_url = "http://localhost:3000/"
+
 var User = {
   attributes: {
     "login":"p1m3nt3l",
@@ -11,7 +13,7 @@ var User = {
   },
 
   create: function() {
-    var request = $.post("http://localhost:3000/doodle/users", { "user": this.attributes })
+    var request = $.post(api_url + "doodle/users", { "user": this.attributes })
 
     request.success(function(user) {
       console.log('user created with success.');
@@ -22,7 +24,7 @@ var User = {
 
   authenticate: function() {
 
-    var request = $.post("http://localhost:3000/doodle/authenticate", { "auth": this.attributes })
+    var request = $.post(api_url + "doodle/authenticate", { "auth": this.attributes })
 
     // response returns a object containing login and session_token attributes.
     request.success(function(response) {
@@ -50,25 +52,23 @@ var Chat = {
   },
 
   displayQueueOptions: function() {
-    var dropdown = $('#queue_options');
-
-    dropdown.show();
-
-    var queues = Chat.queues();
-
-    $.each(queues, function() {
-      $("#options").append($("<option />").val(this).text(this));
-    });
+    $('#queue_options').show();
+    Chat.channels();
   },
 
-  queues: function() {
-    var queues = [
-      'host',
-      'email',
-      'corporativo'
-    ];
+  channels: function() {
+    var options = $("#options");
 
-    return queues;
+    var request = $.get(api_url + "doodle/channels")
+
+    request.success(function(response){
+      console.log(response);
+      options.remove(".channel");
+
+      $.each(response, function() {
+        $("#options").append($("<option class='channel' />").val(this.id).text(this.name));
+      });
+    });
   },
 
   start: function() {
@@ -80,17 +80,17 @@ var Chat = {
     // create a conversation on the selected queue
     this.create();
   },
-  
+
   addMessage: function(message) {
     $('.dc-container-message').append(message)
   },
 
   create: function() {
-    var queue = $('#options').val();
-    console.log('creating a chat on selected queue: ' + queue);
+    var channel = $('#options').val();
+    console.log('creating a chat on selected channel: ' + channel);
 
     var params = {
-      channel: queue,
+      channel_id: channel,
       login: User.attributes['login']
     }
 
@@ -101,7 +101,7 @@ var Chat = {
 var Conversation = {
   create: function(params) {
     console.log('Creating a conversation with params: ' + params);
-    request = $.post("http://localhost:3000/doodle/conversations", params);
+    request = $.post(api_url +"doodle/conversations", params);
 
     request.success(function(response) {
       Chat.conversationId = response.conversation_id;
@@ -129,7 +129,7 @@ var Conversation = {
     });
   },
   close: function(){
-     $.post('http://localhost:3000/doodle/chat/finalize', {conversation_id: Chat.conversationId}, function(response) {
+     $.post(api_url +'doodle/chat/finalize', { conversation_id: Chat.conversationId }, function(response) {
       console.log('chamado finalizado');
       console.log('response:' + response );
      });
@@ -154,6 +154,7 @@ var Conversation = {
   */
   handleChange: function(message) {
     try {
+      console.log(message.operation)
       switch(message.operation) {
         case "create":
         console.log("WEBSOCKET CREATE: " + message.object.id);

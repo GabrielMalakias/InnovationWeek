@@ -28,6 +28,7 @@ var Chat = {
   conversationId: null,
   currentUser: null,
   connection: null,
+  actionKeyword: null,
 
   getSenderName: function(sender) {
     if (sender.name == null) {
@@ -126,8 +127,24 @@ var Chat = {
 
   close: function() {
     Conversation.close();
+
     this.logout();
-    this.addMessage('<p>Chamado finalizado com sucesso</p>');
+
+    var message =
+      '<div class="dc-messages-container">' +
+      '<div class="dc-message message-system">' +
+        '<div class="dc-content-message">' +
+          '<p class="dc-text-message"><strong>Chamado finalizado com sucesso.</strong></p>' +
+      '</div></div></div>';
+
+    Chat.addMessage(message);
+
+    setTimeout(function() {
+      $('.dc-messages-container').remove();
+      $('.dc-footer').hide();
+      $('.dc-controler-rank').hide();
+      $('.container-channel').show();
+    }, 5000);
   },
 
   logout: function() {
@@ -211,7 +228,7 @@ var Conversation = {
     var status_message = 'read';
     sender_name = Chat.getSenderName(sender);
     $.each(parts, function(index,message) {
-      var new_message = '<div class="dc-messages-container">' +
+    var new_message = '<div class="dc-messages-container">' +
                           '<div class="dc-message message-analyst">' +
                             '<div class="dc-content-message">' +
                               '<span class="dc-name-user">' + sender_name + ':</span>' +
@@ -316,6 +333,13 @@ $('#message').keyup(function(e){
 });
 
 function sendMessage(e){
+
+  var readMessage = $('#message').val();
+  
+  if (readMessage) {
+    isActionKeyword(readMessage);
+  }
+
   e.preventDefault();
   var message = $('#message').val();
   var new_message = '<p class="dc-text-message">' + message + '</p>';
@@ -348,6 +372,72 @@ function sendMessage(e){
     });
 }
 
+function isActionKeyword (message){
+    var result = message.match('\^\/');
+    if (result) {
+      var sanitizeMessage = message.replace('/', '').trim();
+      if ( isActionInList(sanitizeMessage, Chat.actionKeyword)) {
+        console.log('é uma keyword action');
+        renderCardForClient(sanitizeMessage);
+      }
+    } else {
+      console.log('não é uma keyword action');
+    }
+
+}
+
+function cardComponent(object) {
+  var card = '<div class="dc-card dc-card-action dc-card-color-white">' +
+              '<div class="dc-card-header action">' +
+                '<i class="material-icons icon-mail">email</i>' +
+                '<h2>' + object.name + '</h2>' +
+              '</div>' +
+  
+              '<div class="dc-action-content">' +
+                '<ul class="dc-card-list dc-test-email">' +
+                  '<li>IMAP</li>' +
+                  '<li>POP</li>' +
+                  '<li class="dc-error-danger">SMTP</li>' +
+                '</ul>' +
+
+                '<ul class="dc-card-list dc-other-test">' +
+                  '<li>Caixa postal: <strong>68% utilizado</strong> </li>' +
+                  '<li>Domínio: <strong>Locaweb</strong> (MX Interno)</li>' +
+                  '<li>Anti-Spam: <strong>ativo</strong></li>' +
+                '</ul>' +
+              '</div>' +
+
+              '<a href="#" class="dc-opencall-container disabled">' +
+                '<div class="dc-action-call">' +
+                  '<span class="dc-icon open-call">' +
+                    '<i class="material-icons">comment</i>' +
+                  '</span>' +
+                  '<span class="dc-open-call">Abrir chamado</span>' +
+                '</div>' +
+              '</a>' +
+            '</div>';
+  return card;
+}
+
+
+function renderCardForClient(message){
+  $.get(api_url + 'doodle/keywords/action?name=' + message, function(response){
+    Chat.addMessage(cardComponent(response));
+  });
+
+}
+
+function isActionInList (message, list) {
+
+  var result = false;
+  list.forEach(function(keyword){
+    if (keyword.name == message) {
+      result = true;
+    }
+  });
+  return result;
+}
+
 $('#chat').submit(function(e) {
   sendMessage(e);
 });
@@ -378,6 +468,15 @@ $(document).ready(function() {
 
   function handleStartChat() {
     Chat.start();
+    keywords();
+  }
+
+  function keywords () {
+    var name = 'testelocamail';
+    // get keywords
+    $.get( api_url + 'doodle/keywords/all_actions', function( response ) {
+      Chat.actionKeyword = response;
+    });
   }
 
   $('.dc-close').click(function(){

@@ -108,7 +108,9 @@ var Chat = {
                           '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
                         '</div>'
 
-                    Chat.addMessage(new_message);
+                    Chat.addMessage(new_message, function(){
+                      $('.dc-messages-container').fadeIn('slow');
+                    });
                   });
             });
 

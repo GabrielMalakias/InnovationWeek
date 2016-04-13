@@ -82,7 +82,9 @@ var Chat = {
   },
   
   addMessage: function(message) {
-    $('.dc-container-message').append(message)
+    $('.dc-container-message').append(message, function(){
+      $('.dc-messages-container').fadeIn('slow');
+    });
   },
 
   create: function() {
@@ -386,9 +388,9 @@ $(document).ready(function() {
   }
 
   $('.dc-close').click(function(){
-    closeScreen();
     Chat.logout();
     Conversation.close();
+    closeScreen();
   });
 
 });

@@ -184,7 +184,7 @@ var Chat = {
       $('.dc-footer').hide();
       $('.dc-controler-rank').hide();
       $('.dc-card-action').hide();
-      $('.welcome-message').hide();
+      $('.welcome-message-analyst').hide();
       $('.container-channel').show();
     }, 5000);
   },

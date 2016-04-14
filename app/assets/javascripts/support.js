@@ -328,18 +328,23 @@ var Conversation = {
 $('#message').keyup(function(e){
   e = e || event;
   if (e.keyCode === 13 && !e.ctrlKey) {
-    sendMessage(e);
+    preSendMessage(e);
   }
   return true;
 });
 
-function sendMessage(e){
+function preSendMessage(e){
 
   var readMessage = $('#message').val();
 
   if (readMessage) {
-    isActionKeyword(readMessage);
-  } else { 
+    isActionKeyword(readMessage, e);
+  }
+
+}
+
+function sendMessageChat(e){
+
     e.preventDefault();
     var message = $('#message').val();
     var new_message = '<p class="dc-text-message">' + message + '</p>';
@@ -360,6 +365,7 @@ function sendMessage(e){
           ]
         }
       }
+
       console.log(attributes);
 
       //Post Message
@@ -370,10 +376,9 @@ function sendMessage(e){
 
         console.log('message create passou');
       });
-  }
 }
 
-function isActionKeyword (message){
+function isActionKeyword (message, e){
     var result = message.match('\^\/');
     if (result) {
       var sanitizeMessage = message.replace('/', '').trim();
@@ -382,7 +387,7 @@ function isActionKeyword (message){
         renderCardForClient(sanitizeMessage);
       }
     } else {
-      console.log('não é uma keyword action');
+      sendMessageChat(e);
     }
 
 }
@@ -456,7 +461,7 @@ function isActionInList (message, list) {
 }
 
 $('#chat').submit(function(e) {
-  sendMessage(e);
+  preSendMessage(e);
 });
 
 $(document).ready(function() {

@@ -421,7 +421,7 @@ function sendMessage(e){
       }
       console.log(attributes);
       //Post Message
-      $.post('http://localhost:3000/doodle/messages', attributes, function(message) {
+      $.post(api_url +'doodle/messages', attributes, function(message) {
         console.log('message create');
         $('#message').val('');
         $('#message')[0].focus();

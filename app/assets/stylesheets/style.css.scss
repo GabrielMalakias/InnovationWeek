@@ -1,4 +1,6 @@
-@import url('mediaqueries');
+.dc-aside-main {
+  display: none;
+}
 
 .materialize-red {
   background-color: #e51c23 !important; }
@@ -3159,32 +3161,47 @@ nav {
 
 @font-face {
   font-family: "Roboto";
-  src: local(Roboto Thin), url("roboto/Roboto-Thin.eot");
-  src: url("roboto/Roboto-Thin.eot?#iefix") format("embedded-opentype"), url("roboto/Roboto-Thin.woff2") format("woff2"), url("roboto/Roboto-Thin.woff") format("woff"), url("roboto/Roboto-Thin.ttf") format("truetype");
+  src: local(Roboto Thin), asset-url("roboto/Roboto-Thin.eot");
+  src: asset-url("roboto/Roboto-Thin.eot?#iefix") format("embedded-opentype"),
+       asset-url("roboto/Roboto-Thin.woff2") format("woff2"),
+       asset-url("roboto/Roboto-Thin.woff") format("woff"),
+       asset-url("roboto/Roboto-Thin.ttf") format("truetype");
   font-weight: 200; }
 
 @font-face {
   font-family: "Roboto";
-  src: local(Roboto Light), url("roboto/Roboto-Light.eot");
-  src: url("roboto/Roboto-Light.eot?#iefix") format("embedded-opentype"), url("roboto/Roboto-Light.woff2") format("woff2"), url("roboto/Roboto-Light.woff") format("woff"), url("roboto/Roboto-Light.ttf") format("truetype");
+  src: local(Roboto Light), asset-url("roboto/Roboto-Light.eot") ;
+  src: asset-url("roboto/Roboto-Light.eot?#iefix")  format("embedded-opentype"),
+       asset-url("roboto/Roboto-Light.woff2")  format("woff2"),
+       asset-url("roboto/Roboto-Light.woff")  format("woff"),
+       asset-url("roboto/Roboto-Light.ttf")  format("truetype");
   font-weight: 300; }
 
 @font-face {
   font-family: "Roboto";
-  src: local(Roboto Regular), url("roboto/Roboto-Regular.eot");
-  src: url("roboto/Roboto-Regular.eot?#iefix") format("embedded-opentype"), url("roboto/Roboto-Regular.woff2") format("woff2"), url("roboto/Roboto-Regular.woff") format("woff"), url("roboto/Roboto-Regular.ttf") format("truetype");
+  src: local(Roboto Regular), asset-url("roboto/Roboto-Regular.eot") ;
+  src:  asset-url("roboto/Roboto-Regular.eot?#iefix") format("embedded-opentype"),
+        asset-url("roboto/Roboto-Regular.woff2") format("woff2"),
+        asset-url("roboto/Roboto-Regular.woff") format("woff"),
+        asset-url("roboto/Roboto-Regular.ttf") format("truetype");
   font-weight: 400; }
 
 @font-face {
   font-family: "Roboto";
-  src: url("roboto/Roboto-Medium.eot");
-  src: url("roboto/Roboto-Medium.eot?#iefix") format("embedded-opentype"), url("roboto/Roboto-Medium.woff2") format("woff2"), url("roboto/Roboto-Medium.woff") format("woff"), url("roboto/Roboto-Medium.ttf") format("truetype");
+  src: asset-url("roboto/Roboto-Medium.eot");
+  src: asset-url("roboto/Roboto-Medium.eot?#iefix") format("embedded-opentype"),
+       asset-url("roboto/Roboto-Medium.woff2") format("woff2"),
+       asset-url("roboto/Roboto-Medium.woff") format("woff"),
+       asset-url("roboto/Roboto-Medium.ttf") format("truetype");
   font-weight: 500; }
 
 @font-face {
   font-family: "Roboto";
-  src: url("roboto/Roboto-Bold.eot");
-  src: url("roboto/Roboto-Bold.eot?#iefix") format("embedded-opentype"), url("roboto/Roboto-Bold.woff2") format("woff2"), url("roboto/Roboto-Bold.woff") format("woff"), url("roboto/Roboto-Bold.ttf") format("truetype");
+  src: asset-url("roboto/Roboto-Bold.eot");
+  src: asset-url("roboto/Roboto-Bold.eot?#iefix") format("embedded-opentype"),
+       asset-url("roboto/Roboto-Bold.woff2") format("woff2"),
+       asset-url("roboto/Roboto-Bold.woff") format("woff"),
+       asset-url("roboto/Roboto-Bold.ttf") format("truetype");
   font-weight: 700; }
 
 a {
@@ -6218,13 +6235,13 @@ body {
   font-family: 'Roboto'; }
 
 #central-do-cliente {
-  background-image: url("central_do_cliente.png"); }
+  background-image: asset-url("central_do_cliente.png"); }
 
 #painel-de-email {
-  background-image: url("painel-de-email.png"); }
+  background-image: asset-url("painel-de-email.png"); }
 
 #painel-smtp {
-  background-image: url("smtp.png"); }
+  background-image: asset-url("smtp.png"); }
 
 .dc-hide {
   display: none; }
@@ -6600,7 +6617,7 @@ body {
 }
 
 #central-de-atendimento {
-  background-image: url("central-de-atendimento.png");
+  background-image: asset-url("central-de-atendimento.png");
   background-size: 100%;
   background-repeat: no-repeat;
 }

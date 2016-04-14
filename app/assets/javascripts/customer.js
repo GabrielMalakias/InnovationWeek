@@ -196,6 +196,9 @@ var Conversation = {
     switch(message.type) {
       case "change":
         Conversation.handleChange(body);
+      default:
+        console.log("IT IS NOT A CHANGE MESSAGE:");
+        console.log(message);
       break;
     }
   },
@@ -229,6 +232,7 @@ var Conversation = {
         case "patch":
           console.log("WEBSOCKET PATCH: " + message.object.id);
           console.log("WEBSOCKET RECEIVED: " + JSON.stringify(message, false, 4));
+
         switch(message.object.type) {
           case "Message":
             // handleUpdateMessage(message);

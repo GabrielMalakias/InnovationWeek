@@ -6585,6 +6585,11 @@ body {
 }
 
 .dc-container-main {
-  max-height: 678px !important;
+  max-height: 647px !important;
   height: 100%;
+}
+
+#container-support {
+   max-height:  585px !important;
+   height: 100%;
 }

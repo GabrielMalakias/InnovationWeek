@@ -6572,3 +6572,7 @@ body {
 .dc-type-indication {
   display: none;
 }
+
+.dc-text-message img {
+  width: 100%;
+}

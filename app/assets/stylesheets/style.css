@@ -6598,3 +6598,9 @@ body {
    max-height:  585px !important;
    height: 100%;
 }
+
+#central-de-atendimento {
+  background-image: url("central-de-atendimento.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}

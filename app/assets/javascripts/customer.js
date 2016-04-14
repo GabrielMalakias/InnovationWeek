@@ -267,8 +267,9 @@ var Conversation = {
     sender_name = getSenderName(sender);
 
     $.each(parts, function(index,message) {
+      var message_type = 'message-client';
       var new_message = '<div class="dc-messages-container">' +
-                          '<div class="dc-message message-client">' +
+                          '<div class="dc-message ' + message_type + '">' +
                             '<div class="dc-content-message">' +
                               '<span class="dc-name-user">' + sender_name + ':</span>' +
                                 '<p class="dc-text-message">' + message.body +'</p>' +

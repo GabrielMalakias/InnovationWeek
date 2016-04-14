@@ -6577,10 +6577,13 @@ body {
   width: 100%;
 }
 
+.message-welcome {
+  display: none;
+}
+
 .message-welcome, 
 .message-welcome-analyst,
 .message-finish {
-  display: none;
   background-color: #A8C9ED;
   margin: 0;
   padding: 0;

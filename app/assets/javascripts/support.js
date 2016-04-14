@@ -41,14 +41,15 @@ var Resume = {
 
     var text_message = 'Você está atendendo o usuário: ' + this.customer_login + '. Ele aguarda desde ' + this.created_at;
     var new_message =
+    '<div class="dc-messages-container">' +
       '<div class="welcome-message-analyst">' +
         '<div class="dc-message message-welcome-analyst">' +
             '<div class="dc-content-message">' +
               '<p class="dc-text-message">' + text_message + '</p>' +
             '</div>' +
           '</div>' +
-      '</div>';
-
+      '</div>'+
+    '</div>'; 
 
     return new_message;
   }

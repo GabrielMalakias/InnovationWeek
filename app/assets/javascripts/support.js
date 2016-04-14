@@ -455,13 +455,17 @@ function isActionKeyword (message, e){
     var result = message.match('\^\/');
     if (result) {
       var sanitizeMessage = message.replace('/', '').trim();
+
       if ( isKeywordInList(sanitizeMessage, Chat.actionKeyword)) {
         console.log('é uma keyword action');
-        renderCardForClient(sanitizeMessage);
+        return renderCardForClient(sanitizeMessage);
+      } else {
+        return sendMessageChat(e);
       }
-    } else {
-      sendMessageChat(e);
-    }
+
+    } 
+    
+    return sendMessageChat(e);
 
 }
 
@@ -516,6 +520,7 @@ function cardComponent(object) {
 function renderCardForClient(message){
   $.get(api_url + 'doodle/keywords/action?name=' + message, function(response){
     Chat.addMessage(cardComponent(response));
+    $('#message').val('');
   });
 
 }

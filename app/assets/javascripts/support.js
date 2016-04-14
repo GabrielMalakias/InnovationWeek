@@ -39,17 +39,19 @@ var Resume = {
     this.customer_login = Conversation.createdBy(Chat.currentUser, message.data.participants);
     this.created_at     = Conversation.formatDateTime(message.data.created_at);
 
-    var text_message = 'Você está atendendo o usuário: ' + '<strong>' + this.customer_login + '</strong>' + '. Ele aguarda há ' + '<strong>' + moment().startOf(this.created_at).fromNow() + '</strong>';
+    var text_message = 'Você está atendendo o usuário: ' + '<strong> ' + this.customer_login + '</strong>' + '. Ele aguarda há ' + '<strong>' + moment().startOf(this.created_at).fromNow() + '</strong>';
+
     var new_message =
-    '<div class="dc-messages-container">' +
+      '<div class="dc-messages-container">' +
       '<div class="welcome-message-analyst">' +
         '<div class="dc-message message-welcome-analyst">' +
             '<div class="dc-content-message">' +
               '<p class="dc-text-message">' + text_message + '</p>' +
             '</div>' +
           '</div>' +
-      '</div>'+
-    '</div>'; 
+        '</div>' +
+      '</div>';
+
 
     return new_message;
   }
@@ -145,13 +147,38 @@ var Chat = {
 
       Chat.connect();
 
+      Chat.enableTypingIndicator();
+
       Chat.enableControls();
     });
 
   },
 
+  enableTypingIndicator: function() {
+    window.setInterval(function() {
+      if (Chat.connection != null)
+        Chat.connection.send(JSON.stringify({
+          "type": "signal",
+          "body": {
+            "type": "typing_indicator",
+            "request_id": Chat.currentUser,
+            "object": {
+              "id": Chat.conversationId
+            },
+            "data": {
+              "user_id": Chat.currentUser,
+              "action": "started"
+            }
+          }
+        }));
+
+        console.log("SIGNAL SENT!");
+    }, 2500);
+  },
+
   addMessage: function(message) {
-    $('.dc-container-message').append(message)
+    $('.dc-container-message').append(message);
+    $(".dc-container-main").scrollTop($(".dc-container-main")[0].scrollHeight);
   },
 
   create: function() {
@@ -173,10 +200,14 @@ var Chat = {
 
     var message =
       '<div class="dc-messages-container">' +
-      '<div class="dc-message message-system">' +
-        '<div class="dc-content-message">' +
-          '<p class="dc-text-message"><strong>Chamado finalizado com sucesso.</strong></p>' +
-      '</div></div></div>';
+        '<div class="dc-welcome-analyst">' +
+          '<div class="dc-message message-finish">' +
+            '<div class="dc-content-message">' +
+              '<p class="dc-text-message"><strong>Chamado finalizado com sucesso.</strong></p>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
 
     Chat.addMessage(message);
 
@@ -192,6 +223,7 @@ var Chat = {
 
   logout: function() {
     this.connection.close();
+    this.connection = null;
     console.log('ws connection terminated by analyst.');
   },
 

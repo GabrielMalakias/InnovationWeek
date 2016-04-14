@@ -136,6 +136,7 @@ var Chat = {
 
   addMessage: function(message) {
     $('.dc-container-message').append(message);
+    $(".dc-container-main").scrollTop($(".dc-container-main")[0].scrollHeight);
   },
 
   create: function() {
@@ -192,10 +193,14 @@ var Conversation = {
   messageHandler: function(event) {
     var message = JSON.parse(event.data);
     var body = message.body;
+    console.log("MESSSSAAAGE: " + message);
     switch(message.type) {
       case "change":
         Conversation.handleChange(body);
-      break;
+        break;
+      default:
+        console.log("IT IS NOT A CHANGE MESSAGE:");
+        console.log(message);
     }
   },
 
@@ -228,6 +233,7 @@ var Conversation = {
         case "patch":
           console.log("WEBSOCKET PATCH: " + message.object.id);
           console.log("WEBSOCKET RECEIVED: " + JSON.stringify(message, false, 4));
+
         switch(message.object.type) {
           case "Message":
             // handleUpdateMessage(message);
@@ -261,8 +267,9 @@ var Conversation = {
     sender_name = getSenderName(sender);
 
     $.each(parts, function(index,message) {
+      var message_type = 'message-client';
       var new_message = '<div class="dc-messages-container">' +
-                          '<div class="dc-message message-client">' +
+                          '<div class="dc-message ' + message_type + '">' +
                             '<div class="dc-content-message">' +
                               '<span class="dc-name-user">' + sender_name + ':</span>' +
                                 '<p class="dc-text-message">' + message.body +'</p>' +

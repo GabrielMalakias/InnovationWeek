@@ -1,4 +1,6 @@
-@import url('mediaqueries');
+.dc-aside-main {
+  display: none;
+}
 
 .materialize-red {
   background-color: #e51c23 !important; }
@@ -6496,14 +6498,14 @@ body {
       margin-bottom: 5px; }
     .dc-messages-container .dc-message .dc-text-message {
       margin: 0; }
-    .dc-messages-container .dc-message.message-client {
-      position: relative;
-      margin-left: 50px;
-      right: 0;
-      background-color: #ECEFF1; }
-    .dc-messages-container .dc-message.message-analyst {
+    .dc-messages-container .dc-message.message-gray {
       position: relative;
       margin-right: 50px;
+      right: 0;
+      background-color: #ECEFF1; }
+    .dc-messages-container .dc-message.message-blue {
+      position: relative;
+      margin-left: 50px;
       left: 0;
       background-color: #b3e5fc; }
   .dc-messages-container span, .dc-messages-container p {

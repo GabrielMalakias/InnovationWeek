@@ -226,8 +226,6 @@ var Chat = {
     this.connection = null;
     console.log('ws connection terminated by analyst.');
   },
-
-
 }
 
 var Conversation = {
@@ -301,18 +299,13 @@ var Conversation = {
     var sender = message.data.sender;
     var status_message = 'read';
     sender_name = Chat.getSenderName(sender);
-    $.each(parts, function(index,message) {
-    var new_message = '<div class="dc-messages-container">' +
-                          '<div class="dc-message message-analyst">' +
-                            '<div class="dc-content-message">' +
-                              '<span class="dc-name-user">' + sender_name + ':</span>' +
-                                '<p class="dc-text-message">' + message.body +'</p>' +
-                              '</div>' +
-                            '</div>' +
-                          '<span class="dc-type-indication dc-floating-left">' + status_message + '</span>' +
-                        '</div>'
 
-      Chat.addMessage(new_message);
+    $.each(parts, function(index,message) {
+      if (sender_name == Chat.currentUser) {
+        Message.grayMessage(message, sender_name);
+      } else {
+        Message.blueMessage(message, sender_name);
+      }
     });
   },
 
@@ -397,6 +390,40 @@ var Conversation = {
     var seconds = date.getSeconds();
     return dateString + ' ' + hours + ':' + minutes +  ':' + seconds;
   }
+}
+
+
+var Message = {
+
+  blueMessage: function(message, sender_name){
+    var status_message = 'read';
+    var message_string = '<div class="dc-messages-container">' +
+                              '<div class="dc-message message-blue">' +
+                                  '<div class="dc-content-message">' +
+                                    '<span class="dc-name-user">' + sender_name + ':</span>' +
+                                    '<p class="dc-text-message">' + message.body +'</p>' +
+                                '</div>' +
+                              '</div>' +
+                              '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                          '</div>';
+
+      Chat.addMessage(message_string);
+  },
+
+  grayMessage: function(message, sender_name){
+      var status_message = 'read';
+      var message_string = '<div class="dc-messages-container">' +
+                              '<div class="dc-message message-gray">' +
+                                  '<div class="dc-content-message">' +
+                                    '<span class="dc-name-user">' + sender_name + ':</span>' +
+                                    '<p class="dc-text-message">' + message.body +'</p>' +
+                                '</div>' +
+                              '</div>' +
+                              '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                          '</div>';
+
+      Chat.addMessage(message_string);
+  }
 
 }
 
@@ -419,8 +446,7 @@ function sendMessageChat(e){
 
     e.preventDefault();
     var message = $('#message').val();
-    message = translateTextKeyword(message)
-    var new_message = '<p class="dc-text-message">' + message + '</p>';
+    message = translateTextKeyword(message);
 
     $('#message').val('');
       // creating a message
@@ -455,13 +481,17 @@ function isActionKeyword (message, e){
     var result = message.match('\^\/');
     if (result) {
       var sanitizeMessage = message.replace('/', '').trim();
+
       if ( isKeywordInList(sanitizeMessage, Chat.actionKeyword)) {
         console.log('é uma keyword action');
-        renderCardForClient(sanitizeMessage);
+        return renderCardForClient(sanitizeMessage);
+      } else {
+        return sendMessageChat(e);
       }
-    } else {
-      sendMessageChat(e);
-    }
+
+    } 
+    
+    return sendMessageChat(e);
 
 }
 
@@ -515,7 +545,13 @@ function cardComponent(object) {
 
 function renderCardForClient(message){
   $.get(api_url + 'doodle/keywords/action?name=' + message, function(response){
-    Chat.addMessage(cardComponent(response));
+    var message = {
+      body: cardComponent(response)
+    }
+
+    Message.grayMessage(message, 'system');
+    $('#message').val('');
+
   });
 
 }

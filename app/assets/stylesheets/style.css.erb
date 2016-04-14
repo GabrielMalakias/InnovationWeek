@@ -3159,47 +3159,32 @@ nav {
 
 @font-face {
   font-family: "Roboto";
-  src: local(Roboto Thin), <%= asset_path("roboto/Roboto-Thin.eot") %>;
-  src: <%= asset_path("roboto/Roboto-Thin.eot?#iefix") %> format("embedded-opentype"),
-       <%= asset_path("roboto/Roboto-Thin.woff2") %> format("woff2"),
-       <%= asset_path("roboto/Roboto-Thin.woff") %> format("woff"),
-       <%= asset_path("roboto/Roboto-Thin.ttf") %> format("truetype");
+  src: local(Roboto Thin), url(<%= asset_path "roboto/Roboto-Thin.eot" %>);
+  src: url(<%= asset_path "roboto/Roboto-Thin.eot?#iefix" %>) format("embedded-opentype"), url(<%= asset_path "roboto/Roboto-Thin.woff2" %>) format("woff2"), url(<%= asset_path "roboto/Roboto-Thin.woff" %>) format("woff"), url(<%= asset_path "roboto/Roboto-Thin.ttf" %>) format("truetype");
   font-weight: 200; }
 
 @font-face {
   font-family: "Roboto";
-  src: local(Roboto Light), <%= asset_path("roboto/Roboto-Light.eot") %> ;
-  src: <%= asset_path("roboto/Roboto-Light.eot?#iefix") %>  format("embedded-opentype"),
-       <%= asset_path("roboto/Roboto-Light.woff2") %>  format("woff2"),
-       <%= asset_path("roboto/Roboto-Light.woff") %>  format("woff"),
-       <%= asset_path("roboto/Roboto-Light.ttf") %>  format("truetype");
+  src: local(Roboto Light), url(<%= asset_path "roboto/Roboto-Light.eot" %>);
+  src: url(<%= asset_path "roboto/Roboto-Light.eot?#iefix" %>) format("embedded-opentype"), url(<%= asset_path"roboto/Roboto-Light.woff2" %>) format("woff2"), url("roboto/Roboto-Light.woff") format("woff"), url("roboto/Roboto-Light.ttf") format("truetype");
   font-weight: 300; }
 
 @font-face {
   font-family: "Roboto";
-  src: local(Roboto Regular), <%= asset_path("roboto/Roboto-Regular.eot")  %>;
-  src:  <%= asset_path("roboto/Roboto-Regular.eot?#iefix") %> format("embedded-opentype"),
-        <%= asset_path("roboto/Roboto-Regular.woff2") %> format("woff2"),
-        <%= asset_path("roboto/Roboto-Regular.woff") %> format("woff"),
-        <%= asset_path("roboto/Roboto-Regular.ttf") %> format("truetype");
+  src: local(Roboto Regular), url("roboto/Roboto-Regular.eot");
+  src: url("roboto/Roboto-Regular.eot?#iefix") format("embedded-opentype"), url("roboto/Roboto-Regular.woff2") format("woff2"), url("roboto/Roboto-Regular.woff") format("woff"), url("roboto/Roboto-Regular.ttf") format("truetype");
   font-weight: 400; }
 
 @font-face {
   font-family: "Roboto";
-  src: <%= asset_path("roboto/Roboto-Medium.eot") %>;
-  src: <%= asset_path("roboto/Roboto-Medium.eot?#iefix") %> format("embedded-opentype"),
-       <%= asset_path("roboto/Roboto-Medium.woff2") %> format("woff2"),
-       <%= asset_path("roboto/Roboto-Medium.woff") %> format("woff"),
-       <%= asset_path("roboto/Roboto-Medium.ttf") %> format("truetype");
+  src: url("roboto/Roboto-Medium.eot");
+  src: url("roboto/Roboto-Medium.eot?#iefix") format("embedded-opentype"), url("roboto/Roboto-Medium.woff2") format("woff2"), url("roboto/Roboto-Medium.woff") format("woff"), url("roboto/Roboto-Medium.ttf") format("truetype");
   font-weight: 500; }
 
 @font-face {
   font-family: "Roboto";
-  src: <%= asset_path("roboto/Roboto-Bold.eot") %>;
-  src: <%= asset_path("roboto/Roboto-Bold.eot?#iefix") %> format("embedded-opentype"),
-       <%= asset_path("roboto/Roboto-Bold.woff2") %> format("woff2"),.
-       <%= asset_path("roboto/Roboto-Bold.woff") %> format("woff"),
-       <%= asset_path("roboto/Roboto-Bold.ttf") %> format("truetype");
+  src: url("roboto/Roboto-Bold.eot");
+  src: url("roboto/Roboto-Bold.eot?#iefix") format("embedded-opentype"), url("roboto/Roboto-Bold.woff2") format("woff2"), url("roboto/Roboto-Bold.woff") format("woff"), url("roboto/Roboto-Bold.ttf") format("truetype");
   font-weight: 700; }
 
 a {
@@ -6233,13 +6218,13 @@ body {
   font-family: 'Roboto'; }
 
 #central-do-cliente {
-  background-image: url("central_do_cliente.png"); }
+  background-image: url(<%= asset_path "central_do_cliente.png" %> ); }
 
 #painel-de-email {
-  background-image: url("painel-de-email.png"); }
+  background-image: url(<%= asset_path "painel-de-email.png" %>); }
 
 #painel-smtp {
-  background-image: url("smtp.png"); }
+  background-image: url(<%= asset_path "smtp.png" %>); }
 
 .dc-hide {
   display: none; }
@@ -6496,12 +6481,12 @@ body {
       margin-bottom: 5px; }
     .dc-messages-container .dc-message .dc-text-message {
       margin: 0; }
-    .dc-messages-container .dc-message.message-client {
+    .dc-messages-container .dc-message.message-gray {
       position: relative;
       margin-left: 50px;
       right: 0;
       background-color: #ECEFF1; }
-    .dc-messages-container .dc-message.message-analyst {
+    .dc-messages-container .dc-message.message-blue {
       position: relative;
       margin-right: 50px;
       left: 0;
@@ -6596,7 +6581,7 @@ body {
   display: none;
 }
 
-.message-welcome, 
+.message-welcome,
 .message-welcome-analyst,
 .message-finish {
   background-color: #A8C9ED;
@@ -6612,10 +6597,4 @@ body {
 #container-support {
    max-height:  585px !important;
    height: 100%;
-}
-
-#central-de-atendimento {
-  background-image: url("central-de-atendimento.png");
-  background-size: 100%;
-  background-repeat: no-repeat;
 }

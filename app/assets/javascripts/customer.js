@@ -5,9 +5,19 @@
 
 var api_url = "http://localhost:3000/"
 
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
 var User = {
   attributes: {
-    "login":"p1m3nt3l",
+    "login":"p1m3nt3l" + guid(),
     "password": "inicial1234",
     "type": "Doodle::User::Customer"
   },
@@ -152,6 +162,40 @@ var Chat = {
   }
 }
 
+var Message = {
+
+  blueMessage: function(message, sender_name){
+    var status_message = 'read';
+    var message_string = '<div class="dc-messages-container">' +
+                              '<div class="dc-message message-blue">' +
+                                  '<div class="dc-content-message">' +
+                                    '<span class="dc-name-user">' + sender_name + ':</span>' +
+                                    '<p class="dc-text-message">' + message.body +'</p>' +
+                                '</div>' +
+                              '</div>' +
+                              '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                          '</div>';
+
+      Chat.addMessage(message_string);
+  },
+
+  grayMessage: function(message, sender_name){
+      var status_message = 'read';
+      var message_string = '<div class="dc-messages-container">' +
+                              '<div class="dc-message message-gray">' +
+                                  '<div class="dc-content-message">' +
+                                    '<span class="dc-name-user">' + sender_name + ':</span>' +
+                                    '<p class="dc-text-message">' + message.body +'</p>' +
+                                '</div>' +
+                              '</div>' +
+                              '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                          '</div>';
+
+      Chat.addMessage(message_string);
+  }
+
+}
+
 var Conversation = {
   create: function(params) {
     console.log('Creating a conversation with params: ' + params);
@@ -263,22 +307,14 @@ var Conversation = {
     var sent_at = Conversation.formatDateTime(message.data.sent_at);
     var parts = message.data.parts;
     var sender = message.data.sender;
-    var status_message = 'read';
     sender_name = getSenderName(sender);
 
     $.each(parts, function(index,message) {
-      var message_type = 'message-client';
-      var new_message = '<div class="dc-messages-container">' +
-                          '<div class="dc-message ' + message_type + '">' +
-                            '<div class="dc-content-message">' +
-                              '<span class="dc-name-user">' + sender_name + ':</span>' +
-                                '<p class="dc-text-message">' + message.body +'</p>' +
-                              '</div>' +
-                            '</div>' +
-                          '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
-                        '</div>'
-
-      Chat.addMessage(new_message);
+      if (sender_name == Chat.currentUser) {
+        Message.grayMessage(message, sender_name);
+      } else {
+        Message.blueMessage(message, sender_name);
+      }
     });
   },
 

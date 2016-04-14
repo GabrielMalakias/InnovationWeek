@@ -151,7 +151,8 @@ var Chat = {
   },
 
   addMessage: function(message) {
-    $('.dc-container-message').append(message)
+    $('.dc-container-message').append(message);
+    $(".dc-container-main").scrollTop($(".dc-container-main")[0].scrollHeight);
   },
 
   create: function() {

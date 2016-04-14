@@ -1,0 +1,82 @@
+<div class="dc-button-back" style="display: none;">
+  <%= link_to customer_path, class: 'link-fake-return' do %>
+    <span>Ir para a <strong>Central do Cliente</strong></span>
+  <% end %>
+</div>
+
+<div class="links-fakes-list">
+  <ul class="links-fake">
+    <li class="painel-smtp"></li>
+    <li class="painel-de-email"></li>
+  </ul>
+</div>
+
+<div class="dc-launch" id="open-chat-window">
+  <a class="btn-floating dc-button btn-large waves-effect waves-light blue">
+    <i class="material-icons">group</i>
+  </a>
+</div>
+
+<aside class="dc-aside-main dc-floating-right" id="chat-box">
+
+<header class="dc-header">
+  <a class="dc-floating-left" href="#">
+    <i class="material-icons dc-burger">view_headline</i>
+  </a>
+
+  <div class="dc-title">
+    <h2 class="title">
+      <a href="#"><strong>Chat</strong> Cliente</a>
+    </h2>
+  </div>
+
+  <div class="dc-actions-buttons dc-floating-right">
+    <ul class="dc-buttons">
+      <li class="dc-minimize">
+        <a href="#">-</a>
+      </li>
+      <li class="dc-close">
+        <a href="#">×</a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<div class="dc-container-main">
+  <div class="dc-container-message">
+
+    <div class="container-channel">
+      <div class="input-field col s6" id="queue_options">
+        <label>Filas disponíveis:</label>
+        <select class="browser-default" id="options">
+          <option value="" disabled selected>Escolha uma fila</option>
+        </select>
+      </div>
+
+      <div class="dc-button-channel" id="chat-start">
+        <a class="waves-effect waves-light btn">Iniciar Chat</a>
+      </div>
+    </div>
+
+
+    <div class="dc-messages-container" id="messages-render">
+      <div class="welcome-message">
+        <div class="dc-message message-welcome">
+            <div class="dc-content-message">
+              <p class="dc-text-message">Aguarde um momento. Um analista entrará no chat, para tirar suas dúvidas!</p>
+            </div>
+          </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<footer class="dc-footer">
+      <div class="dc-container-form">
+        <form id="chat">
+          <textarea class="dc-text-area" name="message" id="message" placeholder="Qual sua dúvida?"></textarea>
+          <input type="submit" id="dc-send" class="dc-btn-send" value="Submit"></input>
+        </form>
+      </div>
+</footer>
+</aside>

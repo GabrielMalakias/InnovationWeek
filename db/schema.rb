@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160407181853) do
+ActiveRecord::Schema.define(version: 20160413204806) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -69,6 +69,8 @@ ActiveRecord::Schema.define(version: 20160407181853) do
     t.string   "status"
     t.datetime "in_progress_at"
     t.datetime "finalized_at"
+    t.decimal  "duration"
+    t.decimal  "waiting_time"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
@@ -80,6 +82,7 @@ ActiveRecord::Schema.define(version: 20160407181853) do
     t.integer  "user_id"
     t.integer  "channel_id"
     t.string   "status"
+    t.boolean  "enable"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

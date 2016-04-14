@@ -10,6 +10,8 @@ class CreateDoodleProtocols < ActiveRecord::Migration
       t.string :status
       t.datetime :in_progress_at
       t.datetime :finalized_at
+      t.decimal :duration
+      t.decimal :waiting_time
 
       t.timestamps null: false
     end

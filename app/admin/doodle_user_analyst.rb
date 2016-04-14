@@ -9,6 +9,13 @@ ActiveAdmin.register Doodle::User::Analyst, as: "UserAnalyst"  do
     f.actions
   end
 
+  index do
+    id_column
+    column :login
+    column :concurrent_protocols
+    column :created_at
+  end
+
   show do
     attributes_table do
       row :login

@@ -6576,3 +6576,10 @@ body {
 .dc-text-message img {
   width: 100%;
 }
+
+.message-welcome {
+  display: none;
+  background-color: #A8C9ED;
+  margin: 0;
+  padding: 0;
+}

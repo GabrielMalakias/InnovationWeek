@@ -42,12 +42,14 @@ var Resume = {
     var text_message = 'Você está atendendo o usuário: ' + '<strong> ' + this.customer_login + '</strong>' + '. Ele aguarda há ' + '<strong>' + moment().startOf(this.created_at).fromNow() + '</strong>';
 
     var new_message =
+      '<div class="dc-messages-container">' +
       '<div class="welcome-message-analyst">' +
         '<div class="dc-message message-welcome-analyst">' +
             '<div class="dc-content-message">' +
               '<p class="dc-text-message">' + text_message + '</p>' +
             '</div>' +
           '</div>' +
+        '</div>' +
       '</div>';
 
 
@@ -198,10 +200,14 @@ var Chat = {
 
     var message =
       '<div class="dc-messages-container">' +
-      '<div class="dc-message message-system">' +
-        '<div class="dc-content-message">' +
-          '<p class="dc-text-message"><strong>Chamado finalizado com sucesso.</strong></p>' +
-      '</div></div></div>';
+        '<div class="dc-welcome-analyst">' +
+          '<div class="dc-message message-finish">' +
+            '<div class="dc-content-message">' +
+              '<p class="dc-text-message"><strong>Chamado finalizado com sucesso.</strong></p>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
 
     Chat.addMessage(message);
 

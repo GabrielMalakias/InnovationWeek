@@ -193,13 +193,14 @@ var Conversation = {
   messageHandler: function(event) {
     var message = JSON.parse(event.data);
     var body = message.body;
+    console.log("MESSSSAAAGE: " + message);
     switch(message.type) {
       case "change":
         Conversation.handleChange(body);
+        break;
       default:
         console.log("IT IS NOT A CHANGE MESSAGE:");
         console.log(message);
-      break;
     }
   },
 

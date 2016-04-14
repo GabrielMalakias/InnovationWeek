@@ -39,7 +39,7 @@ var Resume = {
     this.customer_login = Conversation.createdBy(Chat.currentUser, message.data.participants);
     this.created_at     = Conversation.formatDateTime(message.data.created_at);
 
-    var text_message = 'Você está atendendo o usuário: ' + this.customer_login + '. Ele aguarda desde ' + this.created_at;
+    var text_message = 'Você está atendendo o usuário: ' + '<strong>' + this.customer_login + '</strong>' + '. Ele aguarda há ' + '<strong>' + moment().startOf(this.created_at).fromNow() + '</strong>';
     var new_message =
     '<div class="dc-messages-container">' +
       '<div class="welcome-message-analyst">' +

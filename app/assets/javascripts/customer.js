@@ -25,7 +25,7 @@ var User = {
   create: function() {
     var request = $.post(api_url + "doodle/users", { "user": this.attributes })
 
-    request.success(function(user) {
+    request.done(function(user) {
       console.log('user created with success.');
       console.log(user);
       return user;
@@ -37,9 +37,12 @@ var User = {
     var request = $.post(api_url + "doodle/authenticate", { "auth": this.attributes })
 
     // response returns a object containing login and session_token attributes.
-    request.success(function(response) {
+    request.done(function(response) {
       console.log(response);
       Chat.sessionToken = response.session_token;
+
+      if (Chat.sessionToken)
+        Chat.create();
     });
   }
 }
@@ -124,7 +127,7 @@ var Chat = {
 
     var request = $.get(api_url + "doodle/channels")
 
-    request.success(function(response){
+    request.done(function(response){
       console.log(response);
       options.remove(".channel");
 
@@ -138,10 +141,7 @@ var Chat = {
     console.log('Starting the chat..');
     User.create();
 
-    authentication = User.authenticate();
-
-    // create a conversation on the selected queue
-    this.create();
+    User.authenticate();
   },
 
   addMessage: function(message) {
@@ -201,7 +201,7 @@ var Conversation = {
     console.log('Creating a conversation with params: ' + params);
     request = $.post(api_url +"doodle/conversations", params);
 
-    request.success(function(response) {
+    request.done(function(response) {
       Chat.conversationId = response.conversation_id;
 
       console.log( response );

@@ -302,9 +302,9 @@ var Conversation = {
 
     $.each(parts, function(index,message) {
       if (sender_name == Chat.currentUser) {
-        Message.analystMessage(message, sender_name);
+        Message.grayMessage(message, sender_name);
       } else {
-        Message.customerMessage(message, sender_name);
+        Message.blueMessage(message, sender_name);
       }
     });
   },
@@ -392,12 +392,13 @@ var Conversation = {
   }
 }
 
+
 var Message = {
 
-  analystMessage: function(message, sender_name){
+  blueMessage: function(message, sender_name){
     var status_message = 'read';
     var message_string = '<div class="dc-messages-container">' +
-                              '<div class="dc-message message-analyst">' +
+                              '<div class="dc-message message-blue">' +
                                   '<div class="dc-content-message">' +
                                     '<span class="dc-name-user">' + sender_name + ':</span>' +
                                     '<p class="dc-text-message">' + message.body +'</p>' +
@@ -409,10 +410,10 @@ var Message = {
       Chat.addMessage(message_string);
   },
 
-  customerMessage: function(message, sender_name){
+  grayMessage: function(message, sender_name){
       var status_message = 'read';
       var message_string = '<div class="dc-messages-container">' +
-                              '<div class="dc-message message-client">' +
+                              '<div class="dc-message message-gray">' +
                                   '<div class="dc-content-message">' +
                                     '<span class="dc-name-user">' + sender_name + ':</span>' +
                                     '<p class="dc-text-message">' + message.body +'</p>' +
@@ -446,7 +447,6 @@ function sendMessageChat(e){
     e.preventDefault();
     var message = $('#message').val();
     message = translateTextKeyword(message);
-    var new_message = '<p class="dc-text-message">' + message + '</p>';
 
     $('#message').val('');
       // creating a message
@@ -545,8 +545,13 @@ function cardComponent(object) {
 
 function renderCardForClient(message){
   $.get(api_url + 'doodle/keywords/action?name=' + message, function(response){
-    Chat.addMessage(cardComponent(response));
+    var message = {
+      body: cardComponent(response)
+    }
+
+    Message.grayMessage(message, 'system');
     $('#message').val('');
+
   });
 
 }

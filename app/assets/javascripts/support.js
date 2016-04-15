@@ -424,6 +424,10 @@ var Message = {
                           '</div>';
 
       Chat.addMessage(message_string);
+  },
+
+  cardMessageSend: function (message){
+    Chat.addMessage(message);
   }
 
 }
@@ -546,12 +550,9 @@ function cardComponent(object) {
 
 function renderCardForClient(message){
   $.get(api_url + 'doodle/keywords/action?name=' + message, function(response){
-    var message = {
-      body: cardComponent(response)
-    }
+    var message = cardComponent(response);
 
-    Message.grayMessage(message
-      );
+    Message.cardMessageSend(message);
     $('#message').val('');
 
   });

@@ -162,6 +162,40 @@ var Chat = {
   }
 }
 
+var Message = {
+
+  analystMessage: function(message, sender_name){
+    var status_message = 'read';
+    var message_string = '<div class="dc-messages-container">' +
+                              '<div class="dc-message message-analyst">' +
+                                  '<div class="dc-content-message">' +
+                                    '<span class="dc-name-user">' + sender_name + ':</span>' +
+                                    '<p class="dc-text-message">' + message.body +'</p>' +
+                                '</div>' +
+                              '</div>' +
+                              '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                          '</div>';
+
+      Chat.addMessage(message_string);
+  },
+
+  customerMessage: function(message, sender_name){
+      var status_message = 'read';
+      var message_string = '<div class="dc-messages-container">' +
+                              '<div class="dc-message message-client">' +
+                                  '<div class="dc-content-message">' +
+                                    '<span class="dc-name-user">' + sender_name + ':</span>' +
+                                    '<p class="dc-text-message">' + message.body +'</p>' +
+                                '</div>' +
+                              '</div>' +
+                              '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
+                          '</div>';
+
+      Chat.addMessage(message_string);
+  }
+
+}
+
 var Conversation = {
   create: function(params) {
     console.log('Creating a conversation with params: ' + params);
@@ -273,22 +307,14 @@ var Conversation = {
     var sent_at = Conversation.formatDateTime(message.data.sent_at);
     var parts = message.data.parts;
     var sender = message.data.sender;
-    var status_message = 'read';
     sender_name = getSenderName(sender);
 
     $.each(parts, function(index,message) {
-      var message_type = 'message-client';
-      var new_message = '<div class="dc-messages-container">' +
-                          '<div class="dc-message ' + message_type + '">' +
-                            '<div class="dc-content-message">' +
-                              '<span class="dc-name-user">' + sender_name + ':</span>' +
-                                '<p class="dc-text-message">' + message.body +'</p>' +
-                              '</div>' +
-                            '</div>' +
-                          '<span class="dc-type-indication dc-floating-right">' + status_message + '</span>' +
-                        '</div>'
-
-      Chat.addMessage(new_message);
+      if (sender_name == Chat.currentUser) {
+        Message.analystMessage(message, sender_name);
+      } else {
+        Message.customerMessage(message, sender_name);
+      }
     });
   },
 

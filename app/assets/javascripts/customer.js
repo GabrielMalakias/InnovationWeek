@@ -89,7 +89,7 @@ var Chat = {
     '<div class="dc-card card-welcome dc-card-color-white">' +
       '<div class="dc-avatar-container">' +
         '<div class="dc-avatar">' +
-          '<img src="dist/assets/images/avatar-castor.gif" alt="Avatar">' +
+          '<img src="assets/avatar-castor.gif" alt="Avatar">' +
         '</div>' +
     '</div>' +
 

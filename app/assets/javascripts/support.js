@@ -39,7 +39,7 @@ var Resume = {
     this.customer_login = Conversation.createdBy(Chat.currentUser, message.data.participants);
     this.created_at     = Conversation.formatDateTime(message.data.created_at);
 
-    var text_message = 'Você está atendendo o usuário: ' + '<strong> ' + this.customer_login + '</strong>' + '. Ele aguarda há ' + '<strong>' + moment().startOf(this.created_at).fromNow() + '</strong>';
+    var text_message = 'Você está atendendo o usuário: ' + '<strong> ' + this.customer_login + '</strong>' + '<p>Ele aguarda há ' + '<strong>' + moment().startOf(this.created_at).fromNow() + '</strong> </p>';
 
     var new_message =
       '<div class="dc-messages-container">' +
@@ -126,7 +126,7 @@ var Chat = {
 
                   $.each(parts, function(index,message) {
                     var new_message = '<div class="dc-messages-container">' +
-                          '<div class="dc-message message-client">' +
+                          '<div class="dc-message message-gray">' +
                             '<div class="dc-content-message">' +
                               '<span class="dc-name-user">' + sender_name + ':</span>' +
                                 '<p class="dc-text-message">' + message.body +'</p>' +
@@ -395,6 +395,7 @@ var Conversation = {
 
 var Message = {
 
+
   blueMessage: function(message, sender_name){
     var status_message = 'read';
     var message_string = '<div class="dc-messages-container">' +
@@ -549,7 +550,8 @@ function renderCardForClient(message){
       body: cardComponent(response)
     }
 
-    Message.grayMessage(message, 'system');
+    Message.grayMessage(message
+      );
     $('#message').val('');
 
   });

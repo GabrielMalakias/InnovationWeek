@@ -17,7 +17,7 @@ function guid() {
 
 var User = {
   attributes: {
-    "login":"p1m3nt3l" + guid(),
+    "login":"p1m3nt3l" + '<div class="dc-hide">' + guid() + '</div>',
     "password": "inicial1234",
     "type": "Doodle::User::Customer"
   },
